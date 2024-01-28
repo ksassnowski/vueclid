@@ -1,0 +1,25 @@
+{
+  "name": "vueclid",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/vueclid.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vueclid.js",
+      "require": "./dist/vueclid.umd.cjs"
+    }
+  },
+  "types": "./dist/vueclid.d.ts",
+  "scripts": {
+    "build": "vite build && vue-tsc --emitDeclarationOnly"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vue": "^3.3.11",
+    "prettier": "^3.2.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vue-tsc": "^1.8.25"
+  }
+}
