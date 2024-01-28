@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
+* release 0.0.3 ([d9fb81d](https://github.com/ksassnowski/vueclid/commit/d9fb81d6b7cdb20bc1295d8622ad0d3fc62834af))
+
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
+* release 0.0.3 ([0b66657](https://github.com/ksassnowski/vueclid/commit/0b66657aa3f02fac27ab3b7af96ad3decca6778b))
+* release 0.0.3 ([2440b27](https://github.com/ksassnowski/vueclid/commit/2440b27a53b31598fdcc77a2a99cd72ab48757af))
+* release 0.0.3 ([22c6925](https://github.com/ksassnowski/vueclid/commit/22c692546f91b21484c3e3349436fb0904ac0b4b))
+* release 0.0.3 ([236a65f](https://github.com/ksassnowski/vueclid/commit/236a65f0c033d38ecbdab46525cb55cc0acf4a77))
+
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
+* release 0.0.3 ([2440b27](https://github.com/ksassnowski/vueclid/commit/2440b27a53b31598fdcc77a2a99cd72ab48757af))
+* release 0.0.3 ([22c6925](https://github.com/ksassnowski/vueclid/commit/22c692546f91b21484c3e3349436fb0904ac0b4b))
+* release 0.0.3 ([236a65f](https://github.com/ksassnowski/vueclid/commit/236a65f0c033d38ecbdab46525cb55cc0acf4a77))
+
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
+* release 0.0.3 ([22c6925](https://github.com/ksassnowski/vueclid/commit/22c692546f91b21484c3e3349436fb0904ac0b4b))
+* release 0.0.3 ([236a65f](https://github.com/ksassnowski/vueclid/commit/236a65f0c033d38ecbdab46525cb55cc0acf4a77))
+
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
+* release 0.0.3 ([236a65f](https://github.com/ksassnowski/vueclid/commit/236a65f0c033d38ecbdab46525cb55cc0acf4a77))
+
 ## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.2...v0.0.3) (2024-01-28)
 
 
