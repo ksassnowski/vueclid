@@ -5,6 +5,13 @@
 
 ### Miscellaneous Chores
 
+* release 0.0.3 ([e2733bb](https://github.com/ksassnowski/vueclid/commit/e2733bbf7c66d3b0288b1f2ce039369d94aa7da6))
+
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
 * release 0.0.3 ([d9fb81d](https://github.com/ksassnowski/vueclid/commit/d9fb81d6b7cdb20bc1295d8622ad0d3fc62834af))
 
 ## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
