@@ -71,7 +71,14 @@ function animate() {
   animationFrameID = requestAnimationFrame(animate);
 }
 
-onMounted(updatePoints);
+onMounted(() => {
+  updatePoints();
+
+  if (props.animated) {
+    animate();
+  }
+});
+
 watch(
   () => props.animated,
   (value) => {
@@ -84,6 +91,5 @@ watch(
       }
     }
   },
-  { immediate: true },
 );
 </script>
