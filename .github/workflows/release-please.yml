@@ -12,17 +12,19 @@ name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    env:
+      BUN_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
     steps:
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
           release-type: node
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v1.1.1
+        with:
+          registry-url: 'https://registry.npmjs.org'
       - uses: actions/checkout@v4
       - run: bun install
       - run: bun run build
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
