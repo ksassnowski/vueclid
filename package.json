@@ -1,5 +1,5 @@
 {
-  "name": "vueclid",
+  "name": "@ksassnowski/vueclid",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/vueclid.js",
