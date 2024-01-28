@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.3) (2024-01-28)
+
+
+### Miscellaneous Chores
+
+* release 0.0.3 ([236a65f](https://github.com/ksassnowski/vueclid/commit/236a65f0c033d38ecbdab46525cb55cc0acf4a77))
+
 ## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.2...v0.0.3) (2024-01-28)
 
 
