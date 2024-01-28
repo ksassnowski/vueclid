@@ -16,7 +16,6 @@ jobs:
       - uses: google-github-actions/release-please-action@v4
         with:
           release-type: node
-          package-name: ksassnowski/vueclid
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: oven-sh/setup-bun@v1
       - uses: actions/checkout@v4
