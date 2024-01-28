@@ -12,6 +12,8 @@ name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    env:
+      BUN_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
     steps:
       - uses: google-github-actions/release-please-action@v4
         id: release
@@ -25,6 +27,4 @@ jobs:
       - run: bun install
       - run: bun run build
       - run: npm publish
-        env:
-          BUN_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
