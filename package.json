@@ -1,8 +1,15 @@
 {
   "name": "@ksassnowski/vueclid",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./dist/vueclid.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "license": "MIT",
   "exports": {
     ".": {
       "import": "./dist/vueclid.js",
