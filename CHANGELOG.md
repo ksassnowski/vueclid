@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/ksassnowski/vueclid/compare/v0.0.2...v0.0.3) (2024-01-28)
+
+
+### Bug Fixes
+
+* start plot animation inside onMounted hook ([7c9df17](https://github.com/ksassnowski/vueclid/commit/7c9df177f502ced86dbf3faa499eddabe02cd34e))
+
 ## [0.0.2](https://github.com/ksassnowski/vueclid/compare/0.0.1...v0.0.2) (2024-01-28)
 
 
