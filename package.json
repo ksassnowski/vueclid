@@ -2,7 +2,8 @@
   "name": "@ksassnowski/vueclid",
   "version": "0.0.7",
   "type": "module",
-  "main": "./dist/vueclid.js",
+  "main": "./dist/vueclid.umd.js",
+  "module": "./dist/vueclid.js",
   "publishConfig": {
     "access": "public"
   },
