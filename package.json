@@ -1,6 +1,6 @@
 {
   "name": "@ksassnowski/vueclid",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "main": "./dist/vueclid.js",
   "publishConfig": {
