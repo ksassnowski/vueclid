@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/ksassnowski/vueclid/compare/v0.0.4...v0.0.5) (2024-01-29)
+
+
+### Bug Fixes
+
+* use correct name for type declarations file ([d688f8a](https://github.com/ksassnowski/vueclid/commit/d688f8af70a0f6677b3bdfcb2158956c822138b3))
+
 ## [0.0.4](https://github.com/ksassnowski/vueclid/compare/v0.0.3...v0.0.4) (2024-01-29)
 
 
