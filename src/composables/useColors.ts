@@ -1,4 +1,4 @@
-import { computed, readonly, Ref, ref, unref } from "vue";
+import { computed, reactive, readonly, Ref, ref, unref } from "vue";
 import { Color } from "../types.ts";
 
 interface ColorScheme {
@@ -12,7 +12,7 @@ interface ColorScheme {
 }
 type Colors = { light: ColorScheme; dark: ColorScheme };
 
-let colorScheme: Colors = {
+const colorScheme: Colors = reactive({
   light: {
     grid: "#ccc",
     units: "#aaa",
@@ -31,7 +31,7 @@ let colorScheme: Colors = {
     labelBackground: "#222222cc",
     points: "#f1f1f1",
   },
-};
+});
 const darkMode = ref(false);
 const colors = computed(() =>
   darkMode.value ? colorScheme.dark : colorScheme.light,
@@ -67,10 +67,8 @@ function setColors(colors: {
   light?: Partial<ColorScheme>;
   dark?: Partial<ColorScheme>;
 }) {
-  colorScheme = {
-    light: { ...colorScheme.light, ...colors.light },
-    dark: { ...colorScheme.dark, ...colors.dark },
-  };
+  colorScheme.light = { ...colorScheme.light, ...colors.light };
+  colorScheme.dark = { ...colorScheme.dark, ...colors.dark };
 }
 
 export function useColors() {
