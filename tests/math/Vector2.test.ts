@@ -1,6 +1,6 @@
 // @ts-ignore
 import { describe, expect, test } from "bun:test";
-import { Vector2 } from "@/math/Vector2";
+import { Vector2 } from "../../src";
 
 describe("fromPolar", () => {
   test.each([
