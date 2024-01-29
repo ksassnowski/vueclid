@@ -5,7 +5,7 @@
     :r="scaledRadius"
     :fill="fill"
     :stroke="stroke"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     :stroke-dasharray="dashArray"
   />
 </template>
@@ -34,7 +34,7 @@ const props = withDefaults(
   },
 );
 
-const context = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
@@ -43,9 +43,11 @@ const fill = parseColor(toRef(props, "fill"));
 const position = computed(() =>
   new Vector2(props.position)
     .mul(new Vector2(1, -1))
-    .mul(context.scale.value)
-    .add(context.offset.value),
+    .mul(scale.value)
+    .add(offset.value),
 );
-const scaledRadius = computed(() => props.radius * context.scale.value.x);
-const dashArray = computed(() => (props.dashed ? "6,4" : "0,0"));
+const scaledRadius = computed(() => props.radius * scale.value.x);
+const dashArray = computed(() =>
+  props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
 </script>

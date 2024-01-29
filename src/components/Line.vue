@@ -5,7 +5,7 @@
     :x2="to.x"
     :y2="to.y"
     :stroke="color"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     :stroke-dasharray="dashArray"
   />
   <Label
@@ -50,7 +50,7 @@ if (props.to === undefined && props.slope === undefined) {
   throw new Error("Line requires either a `to` prop or a `slope` prop");
 }
 
-const context = useGraphContext();
+const { domain, scale, offset, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
@@ -63,52 +63,54 @@ const from = computed(() => {
   if (props.from) {
     return new Vector2(props.from)
       .mul(new Vector2(1, -1))
-      .mul(context.scale.value)
-      .add(context.offset.value);
+      .mul(scale.value)
+      .add(offset.value);
   }
 
   if (props.to) {
     return new Vector2(0, 0)
       .mul(new Vector2(1, -1))
-      .mul(context.scale.value)
-      .add(context.offset.value);
+      .mul(scale.value)
+      .add(offset.value);
   }
 
-  let x = (context.domain.value.y.x - props.yIntercept) / props.slope!;
-  x = clamp(x, context.domain.value.x.x, context.domain.value.x.y);
+  let x = (domain.value.y.x - props.yIntercept) / props.slope!;
+  x = clamp(x, domain.value.x.x, domain.value.x.y);
   const y = props.slope! * x + props.yIntercept;
   return new Vector2(x, y)
     .mul(new Vector2(1, -1))
-    .mul(context.scale.value)
-    .add(context.offset.value);
+    .mul(scale.value)
+    .add(offset.value);
 });
 const to = computed(() => {
   if (props.to) {
     return new Vector2(props.to)
       .mul(new Vector2(1, -1))
-      .mul(context.scale.value)
-      .add(context.offset.value);
+      .mul(scale.value)
+      .add(offset.value);
   }
 
-  let x = (context.domain.value.y.y - props.yIntercept) / props.slope!;
-  x = clamp(x, context.domain.value.x.x, context.domain.value.x.y);
+  let x = (domain.value.y.y - props.yIntercept) / props.slope!;
+  x = clamp(x, domain.value.x.x, domain.value.x.y);
   const y = props.slope! * x + props.yIntercept;
   return new Vector2(x, y)
     .mul(new Vector2(1, -1))
-    .mul(context.scale.value)
-    .add(context.offset.value);
+    .mul(scale.value)
+    .add(offset.value);
 });
 const labelPosition = computed(() => {
   const localSpaceFrom = from.value
-    .sub(context.offset.value)
-    .div(context.scale.value)
+    .sub(offset.value)
+    .div(scale.value)
     .mul(new Vector2(1, -1));
   const localSpaceTo = to.value
-    .sub(context.offset.value)
-    .div(context.scale.value)
+    .sub(offset.value)
+    .div(scale.value)
     .mul(new Vector2(1, -1));
   const diff = localSpaceTo.sub(localSpaceFrom);
   return localSpaceFrom.add(diff.normalized().scale(diff.length() / 2));
 });
-const dashArray = computed(() => (props.dashed ? "6,4" : "0,0"));
+const dashArray = computed(() =>
+  props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
 </script>

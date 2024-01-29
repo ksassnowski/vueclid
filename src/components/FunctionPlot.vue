@@ -6,7 +6,7 @@
     :x2="visiblePoints[i + 1].x * scale.x + offset.x"
     :y2="visiblePoints[i + 1].y * scale.y + offset.y"
     :stroke="color"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
   />
 </template>
 
@@ -38,7 +38,7 @@ const props = withDefaults(
 
 let animationFrameID: number | null = null;
 
-const { domain, scale, offset, size } = useGraphContext();
+const { domain, scale, offset, size, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");

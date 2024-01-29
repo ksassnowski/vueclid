@@ -20,7 +20,7 @@
     :y1="from.y"
     :x2="to.x"
     :y2="to.y"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     :stroke="color"
     :stroke-dasharray="dashArray"
     :marker-end="`url(#${id})`"
@@ -65,25 +65,23 @@ const props = withDefaults(
 
 const id = Math.random().toString(16).slice(2);
 
-const context = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
 
 const from = computed(() =>
   new Vector2(props.from)
     .mul(new Vector2(1, -1))
-    .mul(context.scale.value)
-    .add(context.offset.value),
+    .mul(scale.value)
+    .add(offset.value),
 );
 const to = computed(() => {
   const toVector = new Vector2(props.to);
 
-  const pixelVector = toVector
-    .sub(Vector2.wrap(props.from))
-    .mul(context.scale.value);
+  const pixelVector = toVector.sub(Vector2.wrap(props.from)).mul(scale.value);
   const angle = pixelVector.angle;
   const magnitude = pixelVector.length();
-  const newMagnitude = magnitude - props.arrowSize;
+  const newMagnitude = magnitude - arrowSize.value;
 
   return new Vector2(
     from.value.x + newMagnitude * Math.cos(angle),
@@ -95,5 +93,8 @@ const labelPosition = computed(() => {
   const fromVector = Vector2.wrap(props.from);
   return fromVector.add(toVector.normalized().scale(toVector.length() / 2));
 });
-const dashArray = computed(() => (props.dashed ? "6,4" : "0,0"));
+const dashArray = computed(() =>
+  props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
+const arrowSize = computed(() => props.arrowSize * invScale.value);
 </script>

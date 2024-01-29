@@ -12,7 +12,7 @@
   <text
     :x="position.x"
     :y="position.y"
-    :style="`font-family: monospace; font-size: ${fontSizes[size]}px; dominant-baseline: middle; text-anchor: middle; font-weight: 500;`"
+    :style="`font-family: monospace; font-size: ${fontSize}px; dominant-baseline: middle; text-anchor: middle; font-weight: 500;`"
     :fill="color"
   >
     {{ text }}
@@ -49,7 +49,7 @@ const sizes = {
   large: 12,
 };
 
-const context = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { colors, parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
@@ -57,16 +57,18 @@ const color = parseColor(toRef(props, "color"), "stroke");
 const position = computed(() =>
   new Vector2(props.position)
     .mul(new Vector2(1, -1))
-    .mul(context.scale.value)
-    .add(context.offset.value),
+    .mul(scale.value)
+    .add(offset.value),
 );
-const boxWidth = computed(() =>
-  Math.max(
-    (props.text.length + 1) * sizes[props.size],
-    sizes[props.size] * 2.5,
-  ),
+const boxWidth = computed(
+  () =>
+    Math.max(
+      (props.text.length + 1) * sizes[props.size],
+      sizes[props.size] * 2.5,
+    ) * invScale.value,
 );
-const boxHeight = computed(() =>
-  Math.min(sizes[props.size] * 3, boxWidth.value),
+const boxHeight = computed(
+  () => Math.min(sizes[props.size] * 3, boxWidth.value) * invScale.value,
 );
+const fontSize = computed(() => fontSizes[props.size] * invScale.value);
 </script>

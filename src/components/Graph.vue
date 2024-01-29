@@ -1,8 +1,9 @@
 <template>
   <svg
+    ref="el"
     :viewBox="`${-padding} ${-padding} ${width + padding * 2} ${height + padding * 2}`"
-    :width="width"
-    :height="height"
+    :width="size.x"
+    :height="size.y"
     xmlns="http://www.w3.org/2000/svg"
   >
     <defs>
@@ -23,7 +24,7 @@
             :d="`M 0 0 L 0 ${scale.y * gridSize} ${scale.x * gridSize} ${scale.y * gridSize} ${scale.x * gridSize} 0 0 0`"
             fill="none"
             :stroke="colors.grid"
-            stroke-width="0.75"
+            :stroke-width="0.75 * invScale"
           />
         </pattern>
       </defs>
@@ -37,7 +38,7 @@
         :x2="offset.x"
         :y2="height"
         :stroke="colors.axis"
-        stroke-width="1.5"
+        :stroke-width="1.5 * invScale"
       />
       <line
         :x1="0"
@@ -45,7 +46,7 @@
         :x2="width"
         :y2="offset.y"
         :stroke="colors.axis"
-        stroke-width="1.5"
+        :stroke-width="1.5 * invScale"
       />
     </template>
 
@@ -60,18 +61,18 @@
           :x2="scale.x * (i - 1) * gridSize"
           :y2="offset.y + 5"
           :stroke="colors.units"
-          stroke-width="1"
+          :stroke-width="1 * invScale"
         />
 
         <text
           :x="scale.x * (i - 1) * gridSize"
           :y="offset.y + 14"
-          style="
+          :style="`
             dominant-baseline: middle;
             text-anchor: middle;
-            font-size: 12px;
+            font-size: ${12 * invScale}px;
             font-family: sans-serif;
-          "
+          `"
           :fill="colors.units"
         >
           {{ formatLabelValue((i - 1) * gridSize - origin.x) }}
@@ -88,18 +89,18 @@
           :x2="offset.x - 5"
           :y2="scale.y * (i - 1) * gridSize"
           :stroke="colors.units"
-          stroke-width="1"
+          :stroke-width="1 * invScale"
         />
 
         <text
           :x="offset.x - 14"
           :y="scale.y * (i - 1) * gridSize"
-          style="
+          :style="`
             dominant-baseline: middle;
             text-anchor: middle;
-            font-size: 12px;
+            font-size: ${12 * invScale}px;
             font-family: sans-serif;
-          "
+          `"
           :fill="colors.units"
         >
           {{ formatLabelValue(origin.y - (i - 1) * gridSize) }}
@@ -114,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, provide } from "vue";
+import { computed, onMounted, provide, ref } from "vue";
 
 import { graphContext } from "../types.ts";
 import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
@@ -148,6 +149,8 @@ const props = withDefaults(
 
 const id = Math.random().toString(16).slice(2);
 const { colors } = useColors();
+const el = ref<SVGElement | null>();
+const containerSize = ref(new Vector2(props.width, props.height));
 
 const origin = computed(() => {
   if (props.origin) {
@@ -170,7 +173,13 @@ const scale = computed(
       props.height / Math.abs(domain.value.y.x - domain.value.y.y),
     ),
 );
-const size = computed(() => new Vector2(props.width, props.height));
+const aspect = computed(() => props.width / props.height);
+const size = computed(() => {
+  const width = Math.min(props.width, containerSize.value.x);
+  const height = width / aspect.value;
+  return new Vector2(width, height);
+});
+const invScale = computed(() => Math.max(1, props.width / size.value.x));
 
 const context = {
   size,
@@ -178,6 +187,7 @@ const context = {
   origin,
   offset,
   domain,
+  invScale,
 };
 
 provide(graphContext, context);
@@ -185,4 +195,14 @@ provide(graphContext, context);
 function formatLabelValue(value: number) {
   return value.toFixed(2).replace(/\.?0+$/, "");
 }
+
+onMounted(() => {
+  const observer = new ResizeObserver((entries) => {
+    const entry = entries[0];
+    const contentBox = entry.contentBoxSize[0];
+    containerSize.value.x = contentBox.inlineSize;
+    containerSize.value.y = contentBox.blockSize;
+  });
+  observer.observe(el.value!.parentElement!);
+});
 </script>

@@ -2,7 +2,7 @@
   <polygon
     :points="`${points.map((p) => `${p.x},${p.y}`).join(' ')}`"
     :stroke="stroke"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     :fill="fill"
   />
 
@@ -48,7 +48,7 @@ if (props.vertices.length < 3) {
   throw new Error("A polygon must have at least 3 vertices");
 }
 
-const context = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
@@ -57,10 +57,7 @@ const fill = parseColor(toRef(props, "fill"));
 const vertices = computed(() => props.vertices.map((v) => Vector2.wrap(v)));
 const points = computed(() =>
   vertices.value.map((v) =>
-    v
-      .mul(new Vector2(1, -1))
-      .mul(context.scale.value)
-      .add(context.offset.value),
+    v.mul(new Vector2(1, -1)).mul(scale.value).add(offset.value),
   ),
 );
 const angles = computed(() => {

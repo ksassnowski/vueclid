@@ -5,7 +5,7 @@
     :r="radius"
     :fill="filled ? color : 'none'"
     :stroke="filled ? 'none' : color"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
   />
 
   <Label
@@ -21,7 +21,7 @@
 import { computed, toRef } from "vue";
 
 import { type Color } from "../types.ts";
-import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import { type PossibleVector2, Vector2 } from "../math/Vector2.ts";
 import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
@@ -47,38 +47,35 @@ const props = withDefaults(
   },
 );
 
-const context = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { parseColor } = useColors();
 const color = parseColor(toRef(props, "color"), "points");
 
 const padding = 25;
 const position = computed(() => new Vector2(props.position));
 const scaledPosition = computed(() =>
-  position.value
-    .mul(new Vector2(1, -1))
-    .mul(context.scale.value)
-    .add(context.offset.value),
+  position.value.mul(new Vector2(1, -1)).mul(scale.value).add(offset.value),
 );
 const labelPosition = computed(() => {
   switch (props.labelPosition) {
     case "top":
       return new Vector2(
         position.value.x,
-        position.value.y + padding / context.scale.value.y,
+        position.value.y + padding / scale.value.y,
       );
     case "bottom":
       return new Vector2(
         position.value.x,
-        position.value.y - padding / context.scale.value.y,
+        position.value.y - padding / scale.value.y,
       );
     case "left":
       return new Vector2(
-        position.value.x - padding / context.scale.value.x,
+        position.value.x - padding / scale.value.x,
         position.value.y,
       );
     case "right":
       return new Vector2(
-        position.value.x + padding / context.scale.value.x,
+        position.value.x + padding / scale.value.x,
         position.value.y,
       );
   }
