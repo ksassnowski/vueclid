@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.6](https://github.com/ksassnowski/vueclid/compare/v0.0.5...v0.0.6) (2024-01-29)
+
+
+### Bug Fixes
+
+* export component types properly ([07deefe](https://github.com/ksassnowski/vueclid/commit/07deefe8f0c648a230ad3a1a0d7a6625e4e73b64))
+
 ## [0.0.5](https://github.com/ksassnowski/vueclid/compare/v0.0.4...v0.0.5) (2024-01-29)
 
 
