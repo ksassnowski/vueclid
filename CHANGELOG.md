@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.7](https://github.com/ksassnowski/vueclid/compare/v0.0.6...v0.0.7) (2024-01-29)
+
+
+### Bug Fixes
+
+* remove path alias ([acea770](https://github.com/ksassnowski/vueclid/commit/acea770ea5a54772299f4a8e0aee885bbe1574eb))
+
 ## [0.0.6](https://github.com/ksassnowski/vueclid/compare/v0.0.5...v0.0.6) (2024-01-29)
 
 
