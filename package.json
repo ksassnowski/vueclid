@@ -16,7 +16,7 @@
       "require": "./dist/vueclid.umd.cjs"
     }
   },
-  "types": "./dist/vueclid.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "vite build && vue-tsc --emitDeclarationOnly"
   },
