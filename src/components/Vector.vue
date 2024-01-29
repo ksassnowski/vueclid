@@ -38,11 +38,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { type PossibleVector2, Vector2 } from "@/math/Vector2.ts";
-
-import Label from "@/components/Label.vue";
-import { useGraphContext } from "@/composables/useGraphContext.ts";
-import { useColors } from "@/composables/useColors.ts";
+import { type PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import Label from "../components/Label.vue";
+import { useGraphContext } from "../composables/useGraphContext.ts";
+import { useColors } from "../composables/useColors.ts";
 
 const props = withDefaults(
   defineProps<{

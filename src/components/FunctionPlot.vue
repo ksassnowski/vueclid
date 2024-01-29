@@ -11,11 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { useGraphContext } from "@/composables/useGraphContext.ts";
-import { PossibleVector2, Vector2 } from "@/math/Vector2.ts";
 import { computed, onMounted, ref, toRef, watch } from "vue";
-import { Color } from "@/types.ts";
-import { useColors } from "@/composables/useColors.ts";
+
+import { Color } from "../types.ts";
+import { useGraphContext } from "../composables/useGraphContext.ts";
+import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import { useColors } from "../composables/useColors.ts";
 
 const props = withDefaults(
   defineProps<{

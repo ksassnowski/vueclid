@@ -1,5 +1,5 @@
 import { inject } from "vue";
-import { graphContext } from "@/types.ts";
+import { graphContext } from "../types.ts";
 
 export function useGraphContext() {
   const context = inject(graphContext);

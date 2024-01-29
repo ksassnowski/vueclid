@@ -1,5 +1,5 @@
 import { computed, readonly, Ref, ref, unref } from "vue";
-import { Color } from "@/types.ts";
+import { Color } from "../types.ts";
 
 interface ColorScheme {
   grid: string;

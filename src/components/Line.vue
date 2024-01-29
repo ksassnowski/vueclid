@@ -19,11 +19,12 @@
 
 <script setup lang="ts">
 import { computed, toRef } from "vue";
-import { PossibleVector2, Vector2 } from "@/math/Vector2.ts";
-import Label from "@/components/Label.vue";
-import { useGraphContext } from "@/composables/useGraphContext.ts";
-import { useColors } from "@/composables/useColors.ts";
-import { type Color } from "@/types.ts";
+
+import { type Color } from "../types.ts";
+import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import Label from "./Label.vue";
+import { useGraphContext } from "../composables/useGraphContext.ts";
+import { useColors } from "../composables/useColors.ts";
 
 const props = withDefaults(
   defineProps<{
