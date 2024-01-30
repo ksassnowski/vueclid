@@ -2,7 +2,7 @@
   <path
     :d="`M ${position.x} ${position.y} L ${line1To.x} ${line1To.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${line2To.x} ${line2To.y} L ${position.x} ${position.y} z`"
     :stroke="strokeColor"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     stroke-linejoin="bevel"
     :fill="fillColor"
     :stroke-dasharray="dashArray"
@@ -40,7 +40,7 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset } = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { color, fill } = toRefs(props);
 const { parseColor } = useColors();
 
@@ -67,7 +67,9 @@ const line2To = computed(() =>
     .mul(new Vector2(1, -1))
     .add(position.value),
 );
-const dashArray = computed(() => (props.dashed ? "6,4" : "0,0"));
+const dashArray = computed(() =>
+  props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
 const sweep = computed(() => {
   const a = line2To.value;
   const b = position.value;

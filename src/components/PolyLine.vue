@@ -4,7 +4,7 @@
       .slice(1)
       .map((point) => `${point.x} ${point.y}`)
       .join(' ')}`"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     :stroke="color"
     :stroke-dasharray="dashArray"
     fill="none"
@@ -32,7 +32,7 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset } = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
@@ -45,5 +45,7 @@ const parsedPoints = computed(() =>
       .add(offset.value),
   ),
 );
-const dashArray = computed(() => (props.dashed ? "6,4" : "0,0"));
+const dashArray = computed(() =>
+  props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
 </script>

@@ -8,7 +8,7 @@
 
   <path
     :d="`M ${start.x} ${start.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${end.x} ${end.y}`"
-    :stroke-width="lineWidth"
+    :stroke-width="lineWidth * invScale"
     :stroke="stroke"
     :stroke-dasharray="dashArray"
     fill="none"
@@ -42,7 +42,7 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset } = useGraphContext();
+const { scale, offset, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
@@ -78,5 +78,7 @@ const end = computed(() => {
     .mul(scale.value)
     .add(offset.value);
 });
-const dashArray = computed(() => (props.dashed ? "6,4" : "0,0"));
+const dashArray = computed(() =>
+  props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
 </script>
