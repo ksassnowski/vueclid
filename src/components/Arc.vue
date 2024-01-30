@@ -13,8 +13,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { type PossibleVector2, Vector2 } from "../math/Vector2.ts";
-import { DEG2RAD } from "../math/constants.ts";
+import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
+import { DEG2RAD } from "../utils/constants.ts";
 import Angle from "../components/Angle.vue";
 import { useColors } from "../composables/useColors.ts";
 

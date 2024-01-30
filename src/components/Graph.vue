@@ -118,7 +118,7 @@
 import { computed, onMounted, provide, ref } from "vue";
 
 import { graphContext } from "../types.ts";
-import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useColors } from "../composables/useColors.ts";
 
 const props = withDefaults(

@@ -1,7 +1,7 @@
 import { computed, reactive, readonly, Ref, ref, unref } from "vue";
 import { Color } from "../types.ts";
 
-interface ColorScheme {
+export interface ColorScheme {
   grid: string;
   units: string;
   axis: string;
@@ -12,7 +12,7 @@ interface ColorScheme {
 }
 type Colors = { light: ColorScheme; dark: ColorScheme };
 
-const colorScheme: Colors = reactive({
+export const colorScheme: Colors = reactive({
   light: {
     grid: "#ccc",
     units: "#aaa",
@@ -32,14 +32,10 @@ const colorScheme: Colors = reactive({
     points: "#f1f1f1",
   },
 });
-const darkMode = ref(false);
+export const darkMode = ref(false);
 const colors = computed(() =>
   darkMode.value ? colorScheme.dark : colorScheme.light,
 );
-
-function setDarkMode(value: boolean) {
-  darkMode.value = value;
-}
 
 function parseColor(
   color: Color | Ref<Color | undefined> | undefined,
@@ -63,18 +59,8 @@ function parseColor(
   });
 }
 
-function setColors(colors: {
-  light?: Partial<ColorScheme>;
-  dark?: Partial<ColorScheme>;
-}) {
-  colorScheme.light = { ...colorScheme.light, ...colors.light };
-  colorScheme.dark = { ...colorScheme.dark, ...colors.dark };
-}
-
 export function useColors() {
   return {
-    setColors,
-    setDarkMode,
     parseColor,
     colors: readonly(colors),
   };

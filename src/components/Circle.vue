@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { computed, toRef } from "vue";
 
-import { type PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { type Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
