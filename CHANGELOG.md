@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/ksassnowski/vueclid/compare/v1.0.2...v1.1.0) (2024-01-30)
+
+
+### Features
+
+* add rotation parameter to ellipse ([fa1bb9d](https://github.com/ksassnowski/vueclid/commit/fa1bb9ddba99b01991708d564052fb3872ed98a3))
+
 ## [1.0.2](https://github.com/ksassnowski/vueclid/compare/v1.0.1...v1.0.2) (2024-01-30)
 
 
