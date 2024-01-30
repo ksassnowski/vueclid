@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.0](https://github.com/ksassnowski/vueclid/compare/v0.0.7...v0.1.0) (2024-01-30)
+
+
+### Features
+
+* add configuration function ([#21](https://github.com/ksassnowski/vueclid/issues/21)) ([aa5d554](https://github.com/ksassnowski/vueclid/commit/aa5d5546e91867d4a86ce40d4723a9b89aa3b02b))
+* make diagrams responsive ([#20](https://github.com/ksassnowski/vueclid/issues/20)) ([2b96c7c](https://github.com/ksassnowski/vueclid/commit/2b96c7c2d0e7149547de8c87ab4c6dfaec0ac331))
+* make setColors reactive ([9a0275e](https://github.com/ksassnowski/vueclid/commit/9a0275e0cd54aeff541c972f0914e57cd87b8855))
+
 ## [0.0.7](https://github.com/ksassnowski/vueclid/compare/v0.0.6...v0.0.7) (2024-01-29)
 
 
