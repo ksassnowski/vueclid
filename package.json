@@ -13,7 +13,10 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "import": "./dist/vueclid.js",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/vueclid.js"
+      },
       "require": "./dist/vueclid.umd.cjs"
     }
   },
