@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0](https://github.com/ksassnowski/vueclid/compare/v0.1.0...v1.0.0) (2024-01-30)
+
+
+### Features
+
+* allow vector to be constructed from a single value ([f07be5f](https://github.com/ksassnowski/vueclid/commit/f07be5f1a05aa8fcf4980e5310a7d44adfd06510))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([e0f73bf](https://github.com/ksassnowski/vueclid/commit/e0f73bfc2243ac8f5b889a2d7ba3f3eff12575c2))
+
 ## [0.1.0](https://github.com/ksassnowski/vueclid/compare/v0.0.7...v0.1.0) (2024-01-30)
 
 
