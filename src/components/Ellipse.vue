@@ -8,6 +8,7 @@
     :stroke="stroke"
     :stroke-width="lineWidth * invScale"
     :stroke-dasharray="dashArray"
+    :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`"
   />
 </template>
 
@@ -27,12 +28,16 @@ const props = withDefaults(
     position?: PossibleVector2;
     dashed?: boolean;
     lineWidth?: number;
+    rotation?: number;
+    radians?: boolean;
   }>(),
   {
     radius: () => new Vector2(1, 1),
     position: () => new Vector2(),
     dashed: false,
     lineWidth: 1.5,
+    rotation: 0,
+    radians: false,
   },
 );
 
@@ -51,5 +56,8 @@ const position = computed(() =>
 const scaledRadius = computed(() => new Vector2(props.radius).mul(scale.value));
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
+);
+const rotation = computed(() =>
+  props.radians ? (props.rotation * 180) / Math.PI : props.rotation,
 );
 </script>
