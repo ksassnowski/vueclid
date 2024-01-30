@@ -27,7 +27,7 @@ npm install @ksassnowski/vueclid
 ## Credits
 
 - [Kai Sassnowski](https://github.com/ksassnowski)
-- [All contributors](https://github.com/roach-php/core/contributors)
+- [All contributors](https://github.com/ksassnowski/vueclid/contributors)
 
 ## License
 
