@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/ksassnowski/vueclid/compare/v1.0.0...v1.0.1) (2024-01-30)
+
+
+### Bug Fixes
+
+* point typescript to correct declaration file ([641877e](https://github.com/ksassnowski/vueclid/commit/641877e6aa351bb6b5fe99d2ae8b955e1f0212a3))
+
 ## [1.0.0](https://github.com/ksassnowski/vueclid/compare/v0.1.0...v1.0.0) (2024-01-30)
 
 
