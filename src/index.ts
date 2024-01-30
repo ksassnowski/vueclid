@@ -11,5 +11,6 @@ export { default as Polygon } from "./components/Polygon.vue";
 export { default as PolyLine } from "./components/PolyLine.vue";
 export { default as Sector } from "./components/Sector.vue";
 export { default as Vector } from "./components/Vector.vue";
-export { Vector2 } from "./math/Vector2";
+export { Vector2 } from "./utils/Vector2";
 export { useColors } from "./composables/useColors";
+export { configureGraphs } from "./utils/configureGraphs";

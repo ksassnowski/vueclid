@@ -13,8 +13,8 @@
 import { computed, toRefs } from "vue";
 
 import { type Color } from "../types.ts";
-import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
-import { DEG2RAD } from "../math/constants.ts";
+import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
+import { DEG2RAD } from "../utils/constants.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 

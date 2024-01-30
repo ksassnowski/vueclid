@@ -21,7 +21,7 @@
 import { computed, toRef } from "vue";
 
 import { type Color } from "../types.ts";
-import { PossibleVector2, Vector2 } from "../math/Vector2.ts";
+import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";

@@ -1,5 +1,5 @@
 import type { ComputedRef, InjectionKey } from "vue";
-import { Vector2 } from "./math/Vector2.ts";
+import { Vector2 } from "./utils/Vector2.ts";
 
 export type Color = string | { light: string; dark: string };
 
