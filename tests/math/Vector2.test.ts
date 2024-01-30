@@ -2,6 +2,38 @@
 import { describe, expect, test } from "bun:test";
 import { Vector2 } from "../../src";
 
+describe("constructor", () => {
+  test("no arguments -> (0, 0)", () => {
+    const v = new Vector2();
+    expect(v.x).toBe(0);
+    expect(v.y).toBe(0);
+  });
+
+  test("x, y -> (x, y)", () => {
+    const v = new Vector2(1, 2);
+    expect(v.x).toBe(1);
+    expect(v.y).toBe(2);
+  });
+
+  test("[x, y] -> (x, y)", () => {
+    const v = new Vector2([1, 2]);
+    expect(v.x).toBe(1);
+    expect(v.y).toBe(2);
+  });
+
+  test("{x, y} -> (x, y)", () => {
+    const v = new Vector2({ x: 1, y: 2 });
+    expect(v.x).toBe(1);
+    expect(v.y).toBe(2);
+  });
+
+  test("x -> (x, x)", () => {
+    const v = new Vector2(new Vector2(1));
+    expect(v.x).toBe(1);
+    expect(v.y).toBe(1);
+  });
+});
+
 describe("fromPolar", () => {
   test.each([
     [1, 0, [1, 0]],
