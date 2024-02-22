@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/ksassnowski/vueclid/compare/v1.1.0...v1.1.1) (2024-02-22)
+
+
+### Bug Fixes
+
+* remove small gaps in function plot ([a960411](https://github.com/ksassnowski/vueclid/commit/a9604111d64c306f840769b8dc18617274796566))
+* scale arrow correctly for short vectors ([635e936](https://github.com/ksassnowski/vueclid/commit/635e936ac8c83869ee502d9b97a777846bb72a96))
+
 ## [1.1.0](https://github.com/ksassnowski/vueclid/compare/v1.0.2...v1.1.0) (2024-01-30)
 
 
