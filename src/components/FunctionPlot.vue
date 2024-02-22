@@ -1,10 +1,7 @@
 <template>
-  <line
-    v-for="(point, i) in visiblePoints.slice(0, -1)"
-    :x1="point.x * scale.x + offset.x"
-    :y1="point.y * scale.y + offset.y"
-    :x2="visiblePoints[i + 1].x * scale.x + offset.x"
-    :y2="visiblePoints[i + 1].y * scale.y + offset.y"
+  <path
+    :d="path"
+    fill="none"
     :stroke="color"
     :stroke-width="lineWidth * invScale"
   />
@@ -53,6 +50,22 @@ const visiblePoints = computed(() => {
   const step = range / size.value.x;
   const i = Math.ceil((props.end - functionDomain.value.x) / step);
   return points.value.slice(0, i);
+});
+
+const path = computed(() => {
+  const points = visiblePoints.value;
+
+  if (points.length === 0) {
+    return "";
+  }
+
+  return `M ${points[0].x * scale.value.x + offset.value.x} ${points[0].y * scale.value.y + offset.value.y} L ${points
+    .slice(1)
+    .map(
+      (p) =>
+        `${p.x * scale.value.x + offset.value.x} ${p.y * scale.value.y + offset.value.y}`,
+    )
+    .join("L ")}`;
 });
 
 function updatePoints() {
