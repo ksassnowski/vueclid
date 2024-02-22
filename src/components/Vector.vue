@@ -69,6 +69,9 @@ const { scale, offset, invScale } = useGraphContext();
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
 
+const pixelVector = computed(() =>
+  Vector2.wrap(props.to).sub(props.from).mul(scale.value),
+);
 const from = computed(() =>
   new Vector2(props.from)
     .mul(new Vector2(1, -1))
@@ -76,11 +79,8 @@ const from = computed(() =>
     .add(offset.value),
 );
 const to = computed(() => {
-  const toVector = new Vector2(props.to);
-
-  const pixelVector = toVector.sub(Vector2.wrap(props.from)).mul(scale.value);
-  const angle = pixelVector.angle;
-  const magnitude = pixelVector.length();
+  const angle = pixelVector.value.angle;
+  const magnitude = pixelVector.value.length();
   const newMagnitude = magnitude - arrowSize.value;
 
   return new Vector2(
@@ -89,12 +89,15 @@ const to = computed(() => {
   );
 });
 const labelPosition = computed(() => {
-  const toVector = Vector2.wrap(props.to).sub(Vector2.wrap(props.from));
   const fromVector = Vector2.wrap(props.from);
+  const toVector = Vector2.wrap(props.to).sub(fromVector);
   return fromVector.add(toVector.normalized().scale(toVector.length() / 2));
 });
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
 );
-const arrowSize = computed(() => props.arrowSize * invScale.value);
+const arrowSize = computed(
+  () =>
+    Math.min(props.arrowSize, pixelVector.value.length() / 2) * invScale.value,
+);
 </script>
