@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g v-bind="$attrs">
     <path
       v-if="fill"
       :d="`M ${scaledB.x} ${scaledB.y} L ${start.x} ${start.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${end.x} ${end.y}`"
@@ -32,8 +32,9 @@ import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { pointInsideSector } from "../utils/geometry.ts";
 import Label from "./Label.vue";
-import { TAU } from "../utils/constants.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -57,11 +58,15 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
+const active = defineModel("active", { default: false });
+usePointerIntersection(active, (point) =>
+  pointInsideSector(a.value, b.value, c.value, props.radius, point),
+);
 
 const a = computed(() => Vector2.wrap(props.a));
 const b = computed(() => Vector2.wrap(props.b));
@@ -73,25 +78,15 @@ const sweep = computed(() => {
     c.value.x * (a.value.y - b.value.y);
   return orientation > 0 ? 1 : 0;
 });
-const scaledB = computed(() =>
-  b.value.mul(new Vector2(1, -1)).mul(scale.value).add(offset.value),
-);
-const scaledRadius = computed(() => props.radius * scale.value.x);
+const scaledB = computed(() => b.value.transform(matrix.value));
+const scaledRadius = computed(() => props.radius * matrix.value.a);
 const start = computed(() => {
-  const direction = a.value.sub(b.value).normalized().mul(new Vector2(1, -1));
-  return b.value
-    .mul(new Vector2(1, -1))
-    .add(direction.scale(props.radius))
-    .mul(scale.value)
-    .add(offset.value);
+  const direction = a.value.sub(b.value).normalized();
+  return b.value.add(direction.scale(props.radius)).transform(matrix.value);
 });
 const end = computed(() => {
-  const direction = c.value.sub(b.value).normalized().mul(new Vector2(1, -1));
-  return b.value
-    .mul(new Vector2(1, -1))
-    .add(direction.scale(props.radius))
-    .mul(scale.value)
-    .add(offset.value);
+  const direction = c.value.sub(b.value).normalized();
+  return b.value.add(direction.scale(props.radius)).transform(matrix.value);
 });
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
@@ -99,13 +94,10 @@ const dashArray = computed(() =>
 const labelPosition = computed(() => {
   const bToA = a.value.sub(b.value);
   const bToC = c.value.sub(b.value);
-  const dot = bToA.dot(bToC);
-  const det = bToA.x * bToC.y - bToA.y * bToC.x;
-  const angle = (Math.atan2(det, dot) + TAU) % TAU;
   return bToA
     .normalized()
     .scale(props.radius)
-    .rotate(angle / 2)
+    .rotate(bToA.clockwiseAngleTo(bToC) / 2)
     .add(b.value);
 });
 </script>

@@ -32,18 +32,13 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
 
 const parsedPoints = computed(() =>
-  props.points.map((point) =>
-    Vector2.wrap(point)
-      .mul(new Vector2(1, -1))
-      .mul(scale.value)
-      .add(offset.value),
-  ),
+  props.points.map((point) => Vector2.wrap(point).transform(matrix.value)),
 );
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",

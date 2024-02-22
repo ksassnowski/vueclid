@@ -1,5 +1,6 @@
 <template>
   <Angle
+    v-bind="$attrs"
     :a="a"
     :b="position"
     :c="c"
@@ -15,10 +16,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { DEG2RAD } from "../utils/constants.ts";
 import Angle from "../components/Angle.vue";
 import { useColors } from "../composables/useColors.ts";
+import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { distanceToArc } from "../utils/geometry.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -32,6 +35,7 @@ const props = withDefaults(
     radians?: boolean;
     label?: string;
     labelSize?: "small" | "normal" | "large";
+    highlightThreshold?: number;
   }>(),
   {
     from: 0,
@@ -41,11 +45,26 @@ const props = withDefaults(
     lineWidth: 1.25,
     radians: false,
     labelSize: "small",
+    highlightThreshold: 0.25,
   },
 );
 
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
+const active = defineModel("active", { default: false });
+usePointerIntersection(active, (point) => {
+  const fromAngle = props.radians ? props.from : props.from * DEG2RAD;
+  const toAngle = props.radians ? props.to : props.to * DEG2RAD;
+  return (
+    distanceToArc(
+      Vector2.wrap(props.position),
+      fromAngle,
+      toAngle,
+      props.radius,
+      point,
+    ) <= props.highlightThreshold
+  );
+});
 
 const position = computed(() => Vector2.wrap(props.position));
 const a = computed(() => {

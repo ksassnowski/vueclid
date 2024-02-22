@@ -23,12 +23,13 @@
     "build": "vite build && vue-tsc --emitDeclarationOnly"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^13.4.1",
     "@types/node": "^20.11.5",
     "@vitejs/plugin-vue": "^4.5.2",
-    "vue": "^3.3.11",
     "prettier": "^3.2.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
+    "vue": "^3.3.11",
     "vue-tsc": "^1.8.25"
   }
 }

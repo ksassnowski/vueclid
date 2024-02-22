@@ -12,5 +12,6 @@ export { default as PolyLine } from "./components/PolyLine.vue";
 export { default as Sector } from "./components/Sector.vue";
 export { default as Vector } from "./components/Vector.vue";
 export { Vector2 } from "./utils/Vector2";
+export { Matrix2D } from "./utils/Matrix2D";
 export { useColors } from "./composables/useColors";
 export { configureGraphs } from "./utils/configureGraphs";

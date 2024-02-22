@@ -41,19 +41,18 @@ const props = withDefaults(
   },
 );
 
-const { offset, scale, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
 
 const position = computed(() =>
-  new Vector2(props.position)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value),
+  new Vector2(props.position).transform(matrix.value),
 );
-const scaledRadius = computed(() => new Vector2(props.radius).mul(scale.value));
+const scaledRadius = computed(() =>
+  new Vector2(props.radius).mul([matrix.value.a, Math.abs(matrix.value.d)]),
+);
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
 );

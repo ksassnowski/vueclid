@@ -40,19 +40,16 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { color, fill } = toRefs(props);
 const { parseColor } = useColors();
 
 const strokeColor = parseColor(color, "stroke");
 const fillColor = parseColor(fill);
 const position = computed(() =>
-  Vector2.wrap(props.position)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value),
+  Vector2.wrap(props.position).transform(matrix.value),
 );
-const scaledRadius = computed(() => props.radius * scale.value.x);
+const scaledRadius = computed(() => props.radius * matrix.value.a);
 const from = computed(() =>
   props.radians ? props.from : props.from * DEG2RAD,
 );

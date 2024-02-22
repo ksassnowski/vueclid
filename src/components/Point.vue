@@ -47,35 +47,33 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 const color = parseColor(toRef(props, "color"), "points");
 
 const padding = 25;
 const position = computed(() => new Vector2(props.position));
-const scaledPosition = computed(() =>
-  position.value.mul(new Vector2(1, -1)).mul(scale.value).add(offset.value),
-);
+const scaledPosition = computed(() => position.value.transform(matrix.value));
 const labelPosition = computed(() => {
   switch (props.labelPosition) {
     case "top":
       return new Vector2(
         position.value.x,
-        position.value.y + padding / scale.value.y,
+        position.value.y + padding / matrix.value.d,
       );
     case "bottom":
       return new Vector2(
         position.value.x,
-        position.value.y - padding / scale.value.y,
+        position.value.y - padding / matrix.value.d,
       );
     case "left":
       return new Vector2(
-        position.value.x - padding / scale.value.x,
+        position.value.x - padding / matrix.value.a,
         position.value.y,
       );
     case "right":
       return new Vector2(
-        position.value.x + padding / scale.value.x,
+        position.value.x + padding / matrix.value.a,
         position.value.y,
       );
   }
