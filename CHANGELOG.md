@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.0](https://github.com/ksassnowski/vueclid/compare/v1.1.1...v1.2.0) (2024-02-28)
+
+
+### Features
+
+* add option to draw labels for angles and arcs ([3c88067](https://github.com/ksassnowski/vueclid/commit/3c8806705089b60ad451de2e6249453c089efef9))
+* add option to draw labels without border ([323baaa](https://github.com/ksassnowski/vueclid/commit/323baaa42301ef7529333a5e467e2bbbae1d4e83))
+* allow labels to be rotated ([9dd32f4](https://github.com/ksassnowski/vueclid/commit/9dd32f4b2fb99480ce8c1abeade64be3736f02e2))
+
 ## [1.1.1](https://github.com/ksassnowski/vueclid/compare/v1.1.0...v1.1.1) (2024-02-22)
 
 
