@@ -1,18 +1,28 @@
 <template>
-  <path
-    v-if="fill"
-    :d="`M ${scaledB.x} ${scaledB.y} L ${start.x} ${start.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${end.x} ${end.y}`"
-    stroke="none"
-    :fill="fill"
-  />
+  <g>
+    <path
+      v-if="fill"
+      :d="`M ${scaledB.x} ${scaledB.y} L ${start.x} ${start.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${end.x} ${end.y}`"
+      stroke="none"
+      :fill="fill"
+    />
 
-  <path
-    :d="`M ${start.x} ${start.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${end.x} ${end.y}`"
-    :stroke-width="lineWidth * invScale"
-    :stroke="stroke"
-    :stroke-dasharray="dashArray"
-    fill="none"
-  />
+    <path
+      :d="`M ${start.x} ${start.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${end.x} ${end.y}`"
+      :stroke-width="lineWidth * invScale"
+      :stroke="stroke"
+      :stroke-dasharray="dashArray"
+      fill="none"
+    />
+
+    <Label
+      v-if="label"
+      :text="label"
+      :position="labelPosition"
+      :color="color"
+      :size="labelSize"
+    />
+  </g>
 </template>
 
 <script setup lang="ts">
@@ -22,6 +32,8 @@ import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
+import Label from "./Label.vue";
+import { TAU } from "../utils/constants.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -33,12 +45,15 @@ const props = withDefaults(
     c: PossibleVector2;
     dashed?: boolean;
     lineWidth?: number;
+    label?: string;
+    labelSize?: "small" | "normal" | "large";
   }>(),
   {
     position: () => new Vector2(),
     radius: 1,
     dashed: false,
     lineWidth: 1.5,
+    labelSize: "small",
   },
 );
 
@@ -81,4 +96,16 @@ const end = computed(() => {
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
 );
+const labelPosition = computed(() => {
+  const bToA = a.value.sub(b.value);
+  const bToC = c.value.sub(b.value);
+  const dot = bToA.dot(bToC);
+  const det = bToA.x * bToC.y - bToA.y * bToC.x;
+  const angle = (Math.atan2(det, dot) + TAU) % TAU;
+  return bToA
+    .normalized()
+    .scale(props.radius)
+    .rotate(angle / 2)
+    .add(b.value);
+});
 </script>

@@ -7,6 +7,8 @@
     :dashed="dashed"
     :line-width="lineWidth"
     :color="color"
+    :label="label"
+    :label-size="labelSize"
   />
 </template>
 
@@ -28,6 +30,8 @@ const props = withDefaults(
     dashed?: boolean;
     lineWidth?: number;
     radians?: boolean;
+    label?: string;
+    labelSize?: "small" | "normal" | "large";
   }>(),
   {
     from: 0,
@@ -36,6 +40,7 @@ const props = withDefaults(
     radius: 3,
     lineWidth: 1.25,
     radians: false,
+    labelSize: "small",
   },
 );
 
