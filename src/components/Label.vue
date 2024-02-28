@@ -1,22 +1,24 @@
 <template>
-  <rect
-    :x="position.x - boxWidth / 2"
-    :y="position.y - boxHeight / 2 - 0.5"
-    :width="boxWidth"
-    :height="boxHeight"
-    :fill="colors.labelBackground"
-    :stroke="color"
-    stroke-width="1.5"
-    rx="6"
-  />
-  <text
-    :x="position.x"
-    :y="position.y"
-    :style="`font-family: monospace; font-size: ${fontSize}px; dominant-baseline: middle; text-anchor: middle; font-weight: 500;`"
-    :fill="color"
-  >
-    {{ text }}
-  </text>
+  <g :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`">
+    <rect
+      :x="position.x - boxWidth / 2"
+      :y="position.y - boxHeight / 2 - 0.5"
+      :width="boxWidth"
+      :height="boxHeight"
+      :fill="colors.labelBackground"
+      :stroke="color"
+      stroke-width="1.5"
+      rx="6"
+    />
+    <text
+      :x="position.x"
+      :y="position.y"
+      :style="`font-family: monospace; font-size: ${fontSize}px; dominant-baseline: middle; text-anchor: middle; font-weight: 500;`"
+      :fill="color"
+    >
+      {{ text }}
+    </text>
+  </g>
 </template>
 
 <script setup lang="ts">
@@ -32,9 +34,14 @@ const props = withDefaults(
     size?: keyof typeof sizes;
     color?: Color;
     position?: PossibleVector2;
+    rotation?: number;
     text: string;
   }>(),
-  { size: "normal", position: () => new Vector2() },
+  {
+    size: "normal",
+    position: () => new Vector2(),
+    rotation: 0,
+  },
 );
 
 const fontSizes = {
