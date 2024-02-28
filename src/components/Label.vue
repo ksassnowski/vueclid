@@ -1,6 +1,7 @@
 <template>
   <g :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`">
     <rect
+      v-if="border"
       :x="position.x - boxWidth / 2"
       :y="position.y - boxHeight / 2 - 0.5"
       :width="boxWidth"
@@ -35,12 +36,14 @@ const props = withDefaults(
     color?: Color;
     position?: PossibleVector2;
     rotation?: number;
+    border?: boolean;
     text: string;
   }>(),
   {
     size: "normal",
     position: () => new Vector2(),
     rotation: 0,
+    border: true,
   },
 );
 
