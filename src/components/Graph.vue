@@ -33,6 +33,7 @@
 
     <template v-if="axis">
       <line
+        v-if="axisX"
         :x1="offset.x"
         :y1="0"
         :x2="offset.x"
@@ -41,6 +42,7 @@
         :stroke-width="1.5 * invScale"
       />
       <line
+        v-if="axisY"
         :x1="0"
         :y1="offset.y"
         :x2="width"
@@ -131,6 +133,8 @@ const props = withDefaults(
     domainX?: PossibleVector2;
     domainY?: PossibleVector2;
     axis?: boolean;
+    axisX?: boolean;
+    axisY?: boolean;
     grid?: boolean;
     units?: boolean;
   }>(),
@@ -142,6 +146,8 @@ const props = withDefaults(
     domainX: () => new Vector2(-5, 5),
     domainY: () => new Vector2(-5, 5),
     axis: true,
+    axisX: true,
+    axisY: true,
     grid: true,
     units: true,
   },
