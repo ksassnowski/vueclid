@@ -1,5 +1,6 @@
 <template>
   <path
+    v-bind="$attrs"
     :d="`M ${parsedPoints[0].x} ${parsedPoints[0].y} L ${parsedPoints
       .slice(1)
       .map((point) => `${point.x} ${point.y}`)

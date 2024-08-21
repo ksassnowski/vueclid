@@ -1,5 +1,6 @@
 <template>
   <ellipse
+    v-bind="$attrs"
     :cx="position.x"
     :cy="position.y"
     :rx="scaledRadius.x"

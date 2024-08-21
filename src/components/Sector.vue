@@ -1,5 +1,6 @@
 <template>
   <path
+    v-bind="$attrs"
     :d="`M ${position.x} ${position.y} L ${line1To.x} ${line1To.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${line2To.x} ${line2To.y} L ${position.x} ${position.y} z`"
     :stroke="strokeColor"
     :stroke-width="lineWidth * invScale"

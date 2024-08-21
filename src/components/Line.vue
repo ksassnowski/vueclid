@@ -1,20 +1,22 @@
 <template>
-  <line
-    :x1="from.x"
-    :y1="from.y"
-    :x2="to.x"
-    :y2="to.y"
-    :stroke="color"
-    :stroke-width="lineWidth * invScale"
-    :stroke-dasharray="dashArray"
-  />
-  <Label
-    v-if="label"
-    :text="label"
-    :position="labelPosition"
-    :color="color"
-    :size="labelSize"
-  />
+  <g v-bind="$attrs">
+    <line
+      :x1="from.x"
+      :y1="from.y"
+      :x2="to.x"
+      :y2="to.y"
+      :stroke="color"
+      :stroke-width="lineWidth * invScale"
+      :stroke-dasharray="dashArray"
+    />
+    <Label
+      v-if="label"
+      :text="label"
+      :position="labelPosition"
+      :color="color"
+      :size="labelSize"
+    />
+  </g>
 </template>
 
 <script setup lang="ts">

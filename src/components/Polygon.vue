@@ -1,20 +1,22 @@
 <template>
-  <polygon
-    :points="`${points.map((p) => `${p.x},${p.y}`).join(' ')}`"
-    :stroke="stroke"
-    :stroke-width="lineWidth * invScale"
-    :fill="fill"
-  />
+  <g v-bind="$attrs">
+    <polygon
+      :points="`${points.map((p) => `${p.x},${p.y}`).join(' ')}`"
+      :stroke="stroke"
+      :stroke-width="lineWidth * invScale"
+      :fill="fill"
+    />
 
-  <Angle
-    v-if="props.angles"
-    v-for="angle in angles"
-    :a="angle.a"
-    :b="angle.b"
-    :c="angle.c"
-    :radius="angleRadius"
-    :dashed="angleDashed"
-  />
+    <Angle
+      v-if="props.angles"
+      v-for="angle in angles"
+      :a="angle.a"
+      :b="angle.b"
+      :c="angle.c"
+      :radius="angleRadius"
+      :dashed="angleDashed"
+    />
+  </g>
 </template>
 
 <script setup lang="ts">

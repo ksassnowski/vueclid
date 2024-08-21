@@ -1,5 +1,8 @@
 <template>
-  <g :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`">
+  <g
+    v-bind="$attrs"
+    :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`"
+  >
     <rect
       v-if="border"
       :x="position.x - scaledBoxWidth / 2"

@@ -1,40 +1,40 @@
 <template>
-  <defs>
-    <marker
-      :id="id"
-      :refY="arrowSize / 3"
-      :markerWidth="arrowSize"
-      :markerHeight="arrowSize / 1.5"
-      orient="auto"
-      markerUnits="userSpaceOnUse"
-    >
-      <polygon
-        :points="`0 0, ${arrowSize} ${arrowSize / 3}, 0 ${arrowSize / 1.5}`"
-        :fill="color"
-      />
-    </marker>
-  </defs>
+  <g v-bind="$attrs">
+    <defs>
+      <marker
+        :id="id"
+        :refY="arrowSize / 3"
+        :markerWidth="arrowSize"
+        :markerHeight="arrowSize / 1.5"
+        orient="auto"
+        markerUnits="userSpaceOnUse"
+      >
+        <polygon
+          :points="`0 0, ${arrowSize} ${arrowSize / 3}, 0 ${arrowSize / 1.5}`"
+          :fill="color"
+        />
+      </marker>
+    </defs>
 
-  <line
-    :x1="from.x"
-    :y1="from.y"
-    :x2="to.x"
-    :y2="to.y"
-    :stroke-width="lineWidth * invScale"
-    :stroke="color"
-    :stroke-dasharray="dashArray"
-    :marker-end="`url(#${id})`"
-  />
+    <line
+      :x1="from.x"
+      :y1="from.y"
+      :x2="to.x"
+      :y2="to.y"
+      :stroke-width="lineWidth * invScale"
+      :stroke="color"
+      :stroke-dasharray="dashArray"
+      :marker-end="`url(#${id})`"
+    />
 
-  <Label
-    v-if="label"
-    :text="label"
-    :position="labelPosition"
-    :color="color"
-    :size="labelSize"
-  />
-
-  <slot />
+    <Label
+      v-if="label"
+      :text="label"
+      :position="labelPosition"
+      :color="color"
+      :size="labelSize"
+    />
+  </g>
 </template>
 
 <script setup lang="ts">

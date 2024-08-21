@@ -1,20 +1,22 @@
 <template>
-  <circle
-    :cx="scaledPosition.x"
-    :cy="scaledPosition.y"
-    :r="radius"
-    :fill="filled ? color : 'none'"
-    :stroke="filled ? 'none' : color"
-    :stroke-width="lineWidth * invScale"
-  />
+  <g v-bind="$attrs">
+    <circle
+      :cx="scaledPosition.x"
+      :cy="scaledPosition.y"
+      :r="radius"
+      :fill="filled ? color : 'none'"
+      :stroke="filled ? 'none' : color"
+      :stroke-width="lineWidth * invScale"
+    />
 
-  <Label
-    v-if="label"
-    :text="label"
-    :position="labelPosition"
-    :color="color"
-    size="small"
-  />
+    <Label
+      v-if="label"
+      :text="label"
+      :position="labelPosition"
+      :color="color"
+      size="small"
+    />
+  </g>
 </template>
 
 <script setup lang="ts">
