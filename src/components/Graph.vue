@@ -5,6 +5,7 @@
     :width="size.x"
     :height="size.y"
     xmlns="http://www.w3.org/2000/svg"
+    v-on="interactive ? { mousemove: onMouseMove } : {}"
   >
     <defs>
       <clipPath :id="`clip-${id}`">
@@ -134,6 +135,7 @@ const props = withDefaults(
     axis?: boolean;
     grid?: boolean;
     units?: boolean;
+    interactive?: boolean;
   }>(),
   {
     width: 300,
@@ -145,13 +147,15 @@ const props = withDefaults(
     axis: true,
     grid: true,
     units: true,
+    interactive: false,
   },
 );
 
 const id = Math.random().toString(16).slice(2);
 const { colors } = useColors();
-const el = ref<SVGElement | null>();
+const el = ref<SVGSVGElement | null>();
 const containerSize = ref(new Vector2(props.width, props.height));
+const svgPoint = ref<SVGPoint | null>();
 
 const origin = computed(() => {
   if (props.origin) {
@@ -189,6 +193,16 @@ const matrixWorld = computed(() => {
   return matrix;
 });
 
+const cursor = computed<Vector2 | null>(() => {
+  if (!svgPoint.value) {
+    return null;
+  }
+  const pos = svgPoint.value!.matrixTransform(
+    el.value!.getScreenCTM()!.inverse(),
+  );
+  return new Vector2(pos.x, pos.y).transform(matrixWorld.value.inverse);
+});
+
 const context = {
   size,
   scale,
@@ -196,6 +210,7 @@ const context = {
   offset,
   domain,
   invScale,
+  cursor,
   matrix: matrixWorld,
 };
 
@@ -203,6 +218,13 @@ provide(graphContext, context);
 
 function formatLabelValue(value: number) {
   return value.toFixed(2).replace(/\.?0+$/, "");
+}
+
+function onMouseMove(event: MouseEvent) {
+  const point = el.value!.createSVGPoint();
+  point.x = event.clientX;
+  point.y = event.clientY;
+  svgPoint.value = point;
 }
 
 onMounted(() => {

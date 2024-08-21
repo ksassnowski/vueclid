@@ -11,6 +11,7 @@
 
     <Label
       v-if="label"
+      v-model:active="labelActive"
       :text="label"
       :position="labelPosition"
       :color="color"
@@ -20,13 +21,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from "vue";
+import { ref, computed, toRef } from "vue";
 
 import { type Color } from "../types.ts";
 import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { pointInsideCircle } from "../utils/geometry.ts";
 
 type LabelPosition = "top" | "bottom" | "left" | "right";
 
@@ -39,6 +42,7 @@ const props = withDefaults(
     label?: string;
     filled?: boolean;
     lineWidth?: number;
+    highlightThreshold?: number;
   }>(),
   {
     radius: 4,
@@ -46,12 +50,28 @@ const props = withDefaults(
     labelPosition: "bottom",
     filled: true,
     lineWidth: 1.5,
+    highlightThreshold: 0.1,
   },
 );
 
 const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 const color = parseColor(toRef(props, "color"), "points");
+const labelActive = ref(false);
+const active = defineModel("active", { default: false });
+usePointerIntersection(active, (point) => {
+  const center = Vector2.wrap(props.position);
+  const pointActive = pointInsideCircle(
+    center,
+    (props.radius + props.lineWidth) / matrix.value.a +
+      props.highlightThreshold,
+    point,
+  );
+  if (!props.label) {
+    return pointActive;
+  }
+  return labelActive.value || pointActive;
+});
 
 const padding = 25;
 const position = computed(() => new Vector2(props.position));

@@ -27,6 +27,8 @@ import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -39,12 +41,14 @@ const props = withDefaults(
     lineWidth?: number;
     label?: string;
     labelSize?: "small" | "normal" | "large";
+    highlightThreshold?: number;
   }>(),
   {
     dashed: false,
     lineWidth: 1.75,
     yIntercept: 0,
     labelSize: "small",
+    highlightThreshold: 0.25,
   },
 );
 
@@ -56,6 +60,16 @@ const { domain, matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
+const active = defineModel("active", { default: false });
+usePointerIntersection(
+  active,
+  (point) =>
+    distanceToLineSegment(
+      from.value.transform(matrix.value.inverse),
+      to.value.transform(matrix.value.inverse),
+      point,
+    ) <= props.highlightThreshold,
+);
 
 function clamp(x: number, min: number, max: number) {
   return Math.min(max, Math.max(min, x));

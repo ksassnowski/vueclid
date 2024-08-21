@@ -38,12 +38,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed} from "vue";
+import { computed } from "vue";
 
 import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import Label from "../components/Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -55,6 +57,7 @@ const props = withDefaults(
     labelSize?: "small" | "normal" | "large";
     lineWidth?: number;
     arrowSize?: number;
+    highlightThreshold?: number;
   }>(),
   {
     from: () => new Vector2(),
@@ -62,6 +65,7 @@ const props = withDefaults(
     lineWidth: 1.75,
     labelSize: "normal",
     arrowSize: 18,
+    highlightThreshold: 0.25,
   },
 );
 
@@ -70,6 +74,16 @@ const id = Math.random().toString(16).slice(2);
 const { matrix, invScale } = useGraphContext();
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
+const active = defineModel("active", { default: false });
+usePointerIntersection(
+  active,
+  (point) =>
+    distanceToLineSegment(
+      Vector2.wrap(props.from),
+      Vector2.wrap(props.to),
+      point,
+    ) <= props.highlightThreshold,
+);
 
 const pixelVector = computed(() =>
   Vector2.wrap(props.to).transform(matrix.value).sub(from.value),
