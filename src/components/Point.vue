@@ -17,6 +17,8 @@
       :color="color"
       size="small"
     />
+
+    <slot />
   </g>
 </template>
 
@@ -29,6 +31,7 @@ import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsideCircle } from "../utils/geometry.ts";
 
 type LabelPosition = "top" | "bottom" | "left" | "right";
@@ -54,13 +57,14 @@ const props = withDefaults(
   },
 );
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(toRef(props, "position"));
 const { parseColor } = useColors();
 const color = parseColor(toRef(props, "color"), "points");
 const labelActive = ref(false);
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) => {
-  const center = Vector2.wrap(props.position);
+  const center = position.value;
   const pointActive = pointInsideCircle(
     center,
     (props.radius + props.lineWidth) / matrix.value.a +

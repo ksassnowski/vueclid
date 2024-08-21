@@ -148,40 +148,52 @@ export class Matrix2D {
 
   public translate(by: PossibleVector2) {
     const v = Vector2.wrap(by);
-    this._tx += v.x;
-    this._ty += v.y;
-    return this;
+    return new Matrix2D(
+      this._a,
+      this._b,
+      this._c,
+      this._d,
+      this._tx + v.x,
+      this._ty + v.y,
+    );
   }
 
   public scale(by: PossibleVector2) {
     const v = Vector2.wrap(by);
-    this._a *= v.x;
-    this._b *= v.x;
-    this._c *= v.y;
-    this._d *= v.y;
-    return this;
+    return new Matrix2D(
+      this._a * v.x,
+      this._b * v.x,
+      this._c * v.y,
+      this._d * v.y,
+      this._tx,
+      this._ty,
+    );
   }
 
   public rotate(angle: number) {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
-    const { _a, _b, _c, _d } = this;
-    this._a = _a * cos - _b * sin;
-    this._b = _a * sin + _b * cos;
-    this._c = _c * cos - _d * sin;
-    this._d = _c * sin + _d * cos;
-    return this;
+    return new Matrix2D(
+      this._a * cos - this._b * sin,
+      this._a * sin + this._b * cos,
+      this._c * cos - this._d * sin,
+      this._c * sin + this._d * cos,
+      this._tx,
+      this._ty,
+    );
   }
 
   public multiply(other: Matrix2D) {
     const { _a, _b, _c, _d, _tx, _ty } = this;
-    this._a = _a * other._a + _b * other._c;
-    this._b = _a * other._b + _b * other._d;
-    this._c = _c * other._a + _d * other._c;
-    this._d = _c * other._b + _d * other._d;
-    this._tx = _tx * other._a + _ty * other._c + other._tx;
-    this._ty = _tx * other._b + _ty * other._d + other._ty;
-    return this;
+
+    return new Matrix2D(
+      _a * other._a + _c * other._b,
+      _b * other._a + _d * other._b,
+      _a * other._c + _c * other._d,
+      _b * other._c + _d * other._d,
+      _a * other._tx + _c * other._ty + _tx,
+      _b * other._tx + _d * other._ty + _ty,
+    );
   }
 
   public equals(other: Matrix2D, threshold: number = 0.000001) {

@@ -1,16 +1,18 @@
 <template>
-  <ellipse
-    v-bind="$attrs"
-    :cx="position.x"
-    :cy="position.y"
-    :rx="scaledRadius.x"
-    :ry="scaledRadius.y"
-    :fill="fill"
-    :stroke="stroke"
-    :stroke-width="lineWidth * invScale"
-    :stroke-dasharray="dashArray"
-    :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`"
-  />
+  <g v-bind="$attrs">
+    <ellipse
+      :cx="position.x"
+      :cy="position.y"
+      :rx="scaledRadius.x"
+      :ry="scaledRadius.y"
+      :fill="fill"
+      :stroke="stroke"
+      :stroke-width="lineWidth * invScale"
+      :stroke-dasharray="dashArray"
+      :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`"
+    />
+    <slot />
+  </g>
 </template>
 
 <script setup lang="ts">
@@ -21,6 +23,7 @@ import { useGraphContext } from "../composables/useGraphContext.ts";
 import { type Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsideEllipse } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -44,7 +47,8 @@ const props = withDefaults(
   },
 );
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(toRef(props, "position"));
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");

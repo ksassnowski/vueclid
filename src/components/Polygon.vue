@@ -16,6 +16,8 @@
       :radius="angleRadius"
       :dashed="angleDashed"
     />
+
+    <slot />
   </g>
 </template>
 
@@ -28,6 +30,7 @@ import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsidePolygon } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -52,8 +55,9 @@ if (props.vertices.length < 3) {
   throw new Error("A polygon must have at least 3 vertices");
 }
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
 const { parseColor } = useColors();
+const matrix = useLocalToWorld();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
@@ -62,7 +66,7 @@ usePointerIntersection(active, (point) =>
   pointInsidePolygon(vertices.value, point),
 );
 
-const vertices = computed(() => props.vertices.map((v) => Vector2.wrap(v)));
+const vertices = computed(() => props.vertices.map(Vector2.wrap));
 const points = computed(() =>
   vertices.value.map((v) => v.transform(matrix.value)),
 );

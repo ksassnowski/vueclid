@@ -20,6 +20,7 @@ import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -37,7 +38,8 @@ const props = withDefaults(
   },
 );
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");

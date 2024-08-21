@@ -10,7 +10,9 @@
     :color="color"
     :label="label"
     :label-size="labelSize"
-  />
+  >
+    <slot />
+  </Angle>
 </template>
 
 <script setup lang="ts">
