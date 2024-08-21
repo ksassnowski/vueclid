@@ -17,7 +17,7 @@
     <text
       :x="position.x"
       :y="position.y"
-      :style="`font-family: monospace; font-size: ${fontSize}px; dominant-baseline: middle; text-anchor: middle; font-weight: 500;`"
+      :style="`font-family: monospace; font-size: ${fontSize}px; dominant-baseline: middle; text-anchor: middle; font-weight: 500; user-select: none;`"
       :fill="color"
     >
       {{ text }}
