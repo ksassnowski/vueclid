@@ -47,8 +47,8 @@ const props = withDefaults(
 );
 
 const { invScale } = useGraphContext();
-const matrix = useLocalToWorld(toRef(props, "position"));
-const { color, fill } = toRefs(props);
+const { color, fill, position: positionProp } = toRefs(props);
+const matrix = useLocalToWorld(positionProp);
 const { parseColor } = useColors();
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) => {
