@@ -22,6 +22,8 @@
       :color="color"
       :size="labelSize"
     />
+
+    <slot />
   </g>
 </template>
 
@@ -33,6 +35,7 @@ import { useGraphContext } from "../composables/useGraphContext.ts";
 import { Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsideSector } from "../utils/geometry.ts";
 import Label from "./Label.vue";
 
@@ -58,7 +61,8 @@ const props = withDefaults(
   },
 );
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(toRef(props, "position"));
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");

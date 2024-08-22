@@ -45,6 +45,7 @@ import Label from "../components/Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -71,7 +72,8 @@ const props = withDefaults(
 
 const id = Math.random().toString(16).slice(2);
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(new Vector2());
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
 const active = defineModel("active", { default: false });

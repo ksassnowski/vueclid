@@ -1,13 +1,15 @@
 <template>
-  <path
-    v-bind="$attrs"
-    :d="`M ${position.x} ${position.y} L ${line1To.x} ${line1To.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${line2To.x} ${line2To.y} L ${position.x} ${position.y} z`"
-    :stroke="strokeColor"
-    :stroke-width="lineWidth * invScale"
-    stroke-linejoin="bevel"
-    :fill="fillColor"
-    :stroke-dasharray="dashArray"
-  />
+  <g v-bind="$attrs">
+    <path
+      :d="`M ${position.x} ${position.y} L ${line1To.x} ${line1To.y} A ${scaledRadius} ${scaledRadius} 0 ${sweep} 0 ${line2To.x} ${line2To.y} L ${position.x} ${position.y} z`"
+      :stroke="strokeColor"
+      :stroke-width="lineWidth * invScale"
+      stroke-linejoin="bevel"
+      :fill="fillColor"
+      :stroke-dasharray="dashArray"
+    />
+    <slot />
+  </g>
 </template>
 
 <script setup lang="ts">
@@ -19,6 +21,7 @@ import { DEG2RAD } from "../utils/constants.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsideSector } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -43,7 +46,8 @@ const props = withDefaults(
   },
 );
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(toRef(props, "position"));
 const { color, fill } = toRefs(props);
 const { parseColor } = useColors();
 const active = defineModel("active", { default: false });

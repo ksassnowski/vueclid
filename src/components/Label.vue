@@ -22,6 +22,8 @@
     >
       {{ text }}
     </text>
+
+    <slot />
   </g>
 </template>
 
@@ -33,6 +35,7 @@ import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsideRectangle } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -64,7 +67,8 @@ const sizes = {
   large: 12,
 };
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(toRef(props, "position"));
 const { colors, parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");

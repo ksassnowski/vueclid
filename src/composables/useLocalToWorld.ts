@@ -1,19 +1,23 @@
-import { Vector2 } from "../utils/Vector2.ts";
-import { computed, inject, provide } from "vue";
-import { parentToWorld } from "../types.ts";
-import {Matrix2D} from "../utils/Matrix2D.ts";
+import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
+import { Ref, computed, inject, provide, unref } from "vue";
+import { parentToWorld as parentToWorldKey } from "../types.ts";
+import { Matrix2D } from "../utils/Matrix2D.ts";
 
-export function useLocalToWorld(localPosition: Vector2) {
-  const parentMatrix = inject(
-      parentToWorld, 
-      computed(() => new Matrix2D()),
+export function useLocalToWorld(
+  localPosition: PossibleVector2 | Ref<PossibleVector2> = new Vector2(),
+) {
+  const parentToWorld = inject(
+    parentToWorldKey,
+    computed(() => new Matrix2D()),
   );
 
-  const transform = new Matrix2D();
-  transform.translate([localPosition.x, localPosition.y]);
-  const matrix = computed(() => parentMatrix.value.multiply(transform));
+  const localToWorld = computed(() => {
+    const position = Vector2.wrap(unref(localPosition));
+    const transform = new Matrix2D().translate([position.x, position.y]);
+    return parentToWorld.value.multiply(transform);
+  });
 
-  provide(parentToWorld, matrix);
+  provide(parentToWorldKey, localToWorld);
 
-  return matrix;
+  return parentToWorld;
 }

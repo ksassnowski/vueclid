@@ -119,21 +119,18 @@ describe("constructor", () => {
 });
 
 test("translate", () => {
-  const m = new Matrix2D();
-  m.translate([5, 2]);
+  const m = new Matrix2D().translate([5, 2]);
   expect(m.equals(new Matrix2D([1, 0, 0, 1, 5, 2]))).toBe(true);
 });
 
 describe("scale", () => {
   test("single value scales both axes", () => {
-    const m = new Matrix2D(1, 2, 3, 4, 5, 6);
-    m.scale(2);
+    const m = new Matrix2D(1, 2, 3, 4, 5, 6).scale(2);
     expect(m.equals(new Matrix2D(2, 4, 6, 8, 5, 6))).toBe(true);
   });
 
   test("scale axes individually", () => {
-    const m = new Matrix2D(1, 2, 3, 4, 5, 6);
-    m.scale([2, 3]);
+    const m = new Matrix2D(1, 2, 3, 4, 5, 6).scale([2, 3]);
     expect(m.equals(new Matrix2D(2, 4, 9, 12, 5, 6))).toBe(true);
   });
 });
@@ -142,9 +139,7 @@ describe("rotate", () => {
   test.each([[Math.PI / 2, [1, 0, 0, 1, 0, 0], [0, 1, -1, 0, 0, 0]]])(
     "angle = %p, input = %p -> %p",
     (angle: number, matrix: PossibleMatrix2D, expected: number) => {
-      const m = new Matrix2D(matrix);
-      m.rotate(angle);
-      console.log(m);
+      const m = new Matrix2D(matrix).rotate(angle);
       expect(m.equals(new Matrix2D(expected))).toBe(true);
     },
   );

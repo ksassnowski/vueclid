@@ -16,6 +16,8 @@
       :color="color"
       :size="labelSize"
     />
+
+    <slot />
   </g>
 </template>
 
@@ -28,6 +30,7 @@ import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -56,8 +59,9 @@ if (props.to === undefined && props.slope === undefined) {
   throw new Error("Line requires either a `to` prop or a `slope` prop");
 }
 
-const { domain, matrix, invScale } = useGraphContext();
+const { domain, invScale } = useGraphContext();
 const { parseColor } = useColors();
+const matrix = useLocalToWorld();
 
 const color = parseColor(toRef(props, "color"), "stroke");
 const active = defineModel("active", { default: false });

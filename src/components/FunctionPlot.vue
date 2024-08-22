@@ -12,6 +12,7 @@ import { computed, onMounted, ref, toRef, watch } from "vue";
 
 import { Color } from "../types.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useColors } from "../composables/useColors.ts";
 
@@ -35,7 +36,8 @@ const props = withDefaults(
 
 let animationFrameID: number | null = null;
 
-const { domain, scale, offset, size, invScale } = useGraphContext();
+const { domain, size, invScale } = useGraphContext();
+const matrix = useLocalToWorld();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
@@ -53,18 +55,17 @@ const visiblePoints = computed(() => {
 });
 
 const path = computed(() => {
-  const points = visiblePoints.value;
+  const points = visiblePoints.value.map((point) =>
+    point.transform(matrix.value),
+  );
 
   if (points.length === 0) {
     return "";
   }
 
-  return `M ${points[0].x * scale.value.x + offset.value.x} ${points[0].y * scale.value.y + offset.value.y} L ${points
+  return `M ${points[0].x} ${points[0].y} L ${points
     .slice(1)
-    .map(
-      (p) =>
-        `${p.x * scale.value.x + offset.value.x} ${p.y * scale.value.y + offset.value.y}`,
-    )
+    .map((p) => `${p.x} ${p.y}`)
     .join("L ")}`;
 });
 

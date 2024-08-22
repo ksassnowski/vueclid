@@ -1,14 +1,16 @@
 <template>
-  <circle
-    v-bind="$attrs"
-    :cx="position.x"
-    :cy="position.y"
-    :r="scaledRadius"
-    :fill="fill"
-    :stroke="stroke"
-    :stroke-width="lineWidth * invScale"
-    :stroke-dasharray="dashArray"
-  />
+  <g v-bind="$attrs">
+    <circle
+      :cx="position.x"
+      :cy="position.y"
+      :r="scaledRadius"
+      :fill="fill"
+      :stroke="stroke"
+      :stroke-width="lineWidth * invScale"
+      :stroke-dasharray="dashArray"
+    />
+    <slot />
+  </g>
 </template>
 
 <script setup lang="ts">
@@ -19,6 +21,7 @@ import { useGraphContext } from "../composables/useGraphContext.ts";
 import { type Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
 import { pointInsideCircle } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -37,7 +40,8 @@ const props = withDefaults(
   },
 );
 
-const { matrix, invScale } = useGraphContext();
+const { invScale } = useGraphContext();
+const matrix = useLocalToWorld(toRef(props, "position"));
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");

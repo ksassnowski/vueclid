@@ -118,7 +118,7 @@
 <script setup lang="ts">
 import { computed, onMounted, provide, ref } from "vue";
 
-import { graphContext } from "../types.ts";
+import { graphContext, parentToWorld } from "../types.ts";
 import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useColors } from "../composables/useColors.ts";
 import { Matrix2D } from "../utils/Matrix2D.ts";
@@ -187,10 +187,9 @@ const size = computed(() => {
 const invScale = computed(() => Math.max(1, props.width / size.value.x));
 
 const matrixWorld = computed(() => {
-  const matrix = new Matrix2D();
-  matrix.translate([offset.value.x, offset.value.y]);
-  matrix.scale([scale.value.x, -scale.value.y]);
-  return matrix;
+  return new Matrix2D()
+    .translate([offset.value.x, offset.value.y])
+    .scale([scale.value.x, -scale.value.y]);
 });
 
 const cursor = computed<Vector2 | null>(() => {
@@ -215,6 +214,7 @@ const context = {
 };
 
 provide(graphContext, context);
+provide(parentToWorld, matrixWorld);
 
 function formatLabelValue(value: number) {
   return value.toFixed(2).replace(/\.?0+$/, "");
