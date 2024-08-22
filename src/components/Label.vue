@@ -2,10 +2,10 @@
   <g :transform="`rotate(${-rotation}, ${position.x}, ${position.y})`">
     <rect
       v-if="border"
-      :x="position.x - boxWidth / 2"
-      :y="position.y - boxHeight / 2 - 0.5"
-      :width="boxWidth"
-      :height="boxHeight"
+      :x="position.x - scaledBoxWidth / 2"
+      :y="position.y - scaledBoxHeight / 2 - 0.5"
+      :width="scaledBoxWidth"
+      :height="scaledBoxHeight"
       :fill="colors.labelBackground"
       :stroke="color"
       stroke-width="1.5"
@@ -59,26 +59,24 @@ const sizes = {
   large: 12,
 };
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { colors, parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
 
 const position = computed(() =>
-  new Vector2(props.position)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value),
+  Vector2.wrap(props.position).transform(matrix.value),
 );
-const boxWidth = computed(
-  () =>
-    Math.max(
-      (props.text.length + 1) * sizes[props.size],
-      sizes[props.size] * 2.5,
-    ) * invScale.value,
+const boxWidth = computed(() =>
+  Math.max(
+    (props.text.length + 1) * sizes[props.size],
+    sizes[props.size] * 2.5,
+  ),
 );
-const boxHeight = computed(
-  () => Math.min(sizes[props.size] * 3, boxWidth.value) * invScale.value,
+const scaledBoxWidth = computed(() => boxWidth.value * invScale.value);
+const boxHeight = computed(() =>
+  Math.min(sizes[props.size] * 3, boxWidth.value),
 );
+const scaledBoxHeight = computed(() => boxHeight.value * invScale.value);
 const fontSize = computed(() => fontSizes[props.size] * invScale.value);
 </script>

@@ -50,7 +50,7 @@ if (props.to === undefined && props.slope === undefined) {
   throw new Error("Line requires either a `to` prop or a `slope` prop");
 }
 
-const { domain, scale, offset, invScale } = useGraphContext();
+const { domain, matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
@@ -61,52 +61,32 @@ function clamp(x: number, min: number, max: number) {
 
 const from = computed(() => {
   if (props.from) {
-    return new Vector2(props.from)
-      .mul(new Vector2(1, -1))
-      .mul(scale.value)
-      .add(offset.value);
+    return new Vector2(props.from).transform(matrix.value);
   }
 
   if (props.to) {
-    return new Vector2(0, 0)
-      .mul(new Vector2(1, -1))
-      .mul(scale.value)
-      .add(offset.value);
+    return new Vector2(0, 0).transform(matrix.value);
   }
 
   let x = (domain.value.y.x - props.yIntercept) / props.slope!;
   x = clamp(x, domain.value.x.x, domain.value.x.y);
   const y = props.slope! * x + props.yIntercept;
-  return new Vector2(x, y)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value);
+  return new Vector2(x, y).transform(matrix.value);
 });
 const to = computed(() => {
   if (props.to) {
-    return new Vector2(props.to)
-      .mul(new Vector2(1, -1))
-      .mul(scale.value)
-      .add(offset.value);
+    return new Vector2(props.to).transform(matrix.value);
   }
 
   let x = (domain.value.y.y - props.yIntercept) / props.slope!;
   x = clamp(x, domain.value.x.x, domain.value.x.y);
   const y = props.slope! * x + props.yIntercept;
-  return new Vector2(x, y)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value);
+  return new Vector2(x, y).transform(matrix.value);
 });
 const labelPosition = computed(() => {
-  const localSpaceFrom = from.value
-    .sub(offset.value)
-    .div(scale.value)
-    .mul(new Vector2(1, -1));
-  const localSpaceTo = to.value
-    .sub(offset.value)
-    .div(scale.value)
-    .mul(new Vector2(1, -1));
+  const worldToLocal = matrix.value.inverse;
+  const localSpaceFrom = from.value.transform(worldToLocal);
+  const localSpaceTo = to.value.transform(worldToLocal);
   const diff = localSpaceTo.sub(localSpaceFrom);
   return localSpaceFrom.add(diff.normalized().scale(diff.length() / 2));
 });

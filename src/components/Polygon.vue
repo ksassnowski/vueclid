@@ -48,7 +48,7 @@ if (props.vertices.length < 3) {
   throw new Error("A polygon must have at least 3 vertices");
 }
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
@@ -56,9 +56,7 @@ const fill = parseColor(toRef(props, "fill"));
 
 const vertices = computed(() => props.vertices.map((v) => Vector2.wrap(v)));
 const points = computed(() =>
-  vertices.value.map((v) =>
-    v.mul(new Vector2(1, -1)).mul(scale.value).add(offset.value),
-  ),
+  vertices.value.map((v) => v.transform(matrix.value)),
 );
 const angles = computed(() => {
   const result = [];

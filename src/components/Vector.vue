@@ -33,10 +33,12 @@
     :color="color"
     :size="labelSize"
   />
+
+  <slot />
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed} from "vue";
 
 import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import Label from "../components/Label.vue";
@@ -65,27 +67,21 @@ const props = withDefaults(
 
 const id = Math.random().toString(16).slice(2);
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
 
 const pixelVector = computed(() =>
-  Vector2.wrap(props.to).sub(props.from).mul(scale.value),
+  Vector2.wrap(props.to).transform(matrix.value).sub(from.value),
 );
-const from = computed(() =>
-  new Vector2(props.from)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value),
-);
+const from = computed(() => Vector2.wrap(props.from).transform(matrix.value));
 const to = computed(() => {
   const angle = pixelVector.value.angle;
   const magnitude = pixelVector.value.length();
   const newMagnitude = magnitude - arrowSize.value;
-
   return new Vector2(
     from.value.x + newMagnitude * Math.cos(angle),
-    from.value.y - newMagnitude * Math.sin(angle),
+    from.value.y + newMagnitude * Math.sin(angle),
   );
 });
 const labelPosition = computed(() => {

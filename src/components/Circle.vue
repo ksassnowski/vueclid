@@ -1,5 +1,6 @@
 <template>
   <circle
+    v-bind="$attrs"
     :cx="position.x"
     :cy="position.y"
     :r="scaledRadius"
@@ -34,19 +35,16 @@ const props = withDefaults(
   },
 );
 
-const { scale, offset, invScale } = useGraphContext();
+const { matrix, invScale } = useGraphContext();
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
 
 const position = computed(() =>
-  new Vector2(props.position)
-    .mul(new Vector2(1, -1))
-    .mul(scale.value)
-    .add(offset.value),
+  new Vector2(props.position).transform(matrix.value),
 );
-const scaledRadius = computed(() => props.radius * scale.value.x);
+const scaledRadius = computed(() => props.radius * matrix.value.a);
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",
 );

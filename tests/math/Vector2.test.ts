@@ -32,6 +32,12 @@ describe("constructor", () => {
     expect(v.x).toBe(1);
     expect(v.y).toBe(1);
   });
+
+  test("{width, height} -> (width, height)", () => {
+    const v = new Vector2({ width: 1, height: 2 });
+    expect(v.x).toBe(1);
+    expect(v.y).toBe(2);
+  });
 });
 
 describe("fromPolar", () => {
@@ -260,5 +266,29 @@ describe("slope", () => {
   ])("%p -> %p", (vector: [number, number], expected: number) => {
     const a = new Vector2(vector[0], vector[1]);
     expect(a.slope).toBeCloseTo(expected);
+  });
+});
+
+describe("aliases", () => {
+  test("width is an alias for x", () => {
+    const v = new Vector2(1, 2);
+    expect(v.width).toBe(1);
+
+    v.x = 2;
+    expect(v.width).toBe(2);
+
+    v.width = 4;
+    expect(v.x).toBe(4);
+  });
+
+  test("height is an alias for y", () => {
+    const v = new Vector2(1, 2);
+    expect(v.height).toBe(2);
+
+    v.y = 3;
+    expect(v.height).toBe(3);
+
+    v.height = 5;
+    expect(v.y).toBe(5);
   });
 });
