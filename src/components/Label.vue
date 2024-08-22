@@ -32,6 +32,8 @@ import { type Color } from "../types.ts";
 import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { pointInsideRectangle } from "../utils/geometry.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -66,6 +68,13 @@ const { matrix, invScale } = useGraphContext();
 const { colors, parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
+const active = defineModel("active", { default: false });
+usePointerIntersection(active, (point) => {
+  const center = Vector2.wrap(props.position);
+  const width = boxWidth.value / matrix.value.a;
+  const height = boxHeight.value / matrix.value.a;
+  return pointInsideRectangle(center, new Vector2(width, height), point);
+});
 
 const position = computed(() =>
   Vector2.wrap(props.position).transform(matrix.value),

@@ -18,6 +18,8 @@ import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { type Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
+import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { pointInsideCircle } from "../utils/geometry.ts";
 
 const props = withDefaults(
   defineProps<{
@@ -40,6 +42,10 @@ const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
+const active = defineModel("active", { default: false });
+usePointerIntersection(active, (point) =>
+  pointInsideCircle(Vector2.wrap(props.position), props.radius, point),
+);
 
 const position = computed(() =>
   new Vector2(props.position).transform(matrix.value),
