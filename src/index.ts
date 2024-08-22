@@ -4,6 +4,7 @@ export { default as Circle } from "./components/Circle.vue";
 export { default as Ellipse } from "./components/Ellipse.vue";
 export { default as FunctionPlot } from "./components/FunctionPlot.vue";
 export { default as Graph } from "./components/Graph.vue";
+export { default as Group } from "./components/Group.vue";
 export { default as Label } from "./components/Label.vue";
 export { default as Line } from "./components/Line.vue";
 export { default as Point } from "./components/Point.vue";
