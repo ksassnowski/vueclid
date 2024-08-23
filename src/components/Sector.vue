@@ -21,7 +21,7 @@ import { DEG2RAD } from "../utils/constants.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { pointInsideSector } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -48,22 +48,26 @@ const props = withDefaults(
 
 const { invScale } = useGraphContext();
 const { color, fill, position: positionProp } = toRefs(props);
-const matrix = useLocalToWorld(positionProp);
+const { parentToWorld, cameraMatrix } = useMatrices(positionProp);
 const { parseColor } = useColors();
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) => {
-  const b = Vector2.wrap(props.position);
-  const a = Vector2.fromPolar(from.value, props.radius).add(b);
-  const c = Vector2.fromPolar(to.value, props.radius).add(b);
+  const b = Vector2.wrap(props.position).transform(cameraMatrix.value);
+  const a = Vector2.fromPolar(from.value, props.radius)
+    .add(props.position)
+    .transform(cameraMatrix.value)
+  const c = Vector2.fromPolar(to.value, props.radius)
+    .add(props.position)
+    .transform(cameraMatrix.value);
   return pointInsideSector(a, b, c, props.radius, point);
 });
 
 const strokeColor = parseColor(color, "stroke");
 const fillColor = parseColor(fill);
 const position = computed(() =>
-  Vector2.wrap(props.position).transform(matrix.value),
+  Vector2.wrap(props.position).transform(parentToWorld.value),
 );
-const scaledRadius = computed(() => props.radius * matrix.value.a);
+const scaledRadius = computed(() => props.radius * parentToWorld.value.a);
 const from = computed(() =>
   props.radians ? props.from : props.from * DEG2RAD,
 );

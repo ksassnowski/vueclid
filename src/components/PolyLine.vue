@@ -20,7 +20,7 @@ import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -39,15 +39,15 @@ const props = withDefaults(
 );
 
 const { invScale } = useGraphContext();
-const matrix = useLocalToWorld();
+const { parentToWorld, cameraMatrix } = useMatrices();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) => {
   for (let i = 0; i < props.points.length - 1; i++) {
-    const p0 = Vector2.wrap(props.points[i]);
-    const p1 = Vector2.wrap(props.points[i + 1]);
+    const p0 = Vector2.wrap(props.points[i]).transform(cameraMatrix.value);
+    const p1 = Vector2.wrap(props.points[i + 1]).transform(cameraMatrix.value);
     if (distanceToLineSegment(p0, p1, point) <= props.highlightThreshold) {
       return true;
     }
@@ -56,7 +56,7 @@ usePointerIntersection(active, (point) => {
 });
 
 const parsedPoints = computed(() =>
-  props.points.map((point) => Vector2.wrap(point).transform(matrix.value)),
+  props.points.map((point) => Vector2.wrap(point).transform(parentToWorld.value)),
 );
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",

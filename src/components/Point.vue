@@ -31,7 +31,7 @@ import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { pointInsideCircle } from "../utils/geometry.ts";
 
 type LabelPosition = "top" | "bottom" | "left" | "right";
@@ -58,16 +58,15 @@ const props = withDefaults(
 );
 
 const { invScale } = useGraphContext();
-const matrix = useLocalToWorld(toRef(props, "position"));
+const { parentToWorld, cameraPosition } = useMatrices(toRef(props, "position"));
 const { parseColor } = useColors();
 const color = parseColor(toRef(props, "color"), "points");
 const labelActive = ref(false);
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) => {
-  const center = position.value;
   const pointActive = pointInsideCircle(
-    center,
-    (props.radius + props.lineWidth) / matrix.value.a +
+    cameraPosition.value,
+    (props.radius + props.lineWidth) / parentToWorld.value.a +
       props.highlightThreshold,
     point,
   );
@@ -79,29 +78,19 @@ usePointerIntersection(active, (point) => {
 
 const padding = 25;
 const position = computed(() => new Vector2(props.position));
-const scaledPosition = computed(() => position.value.transform(matrix.value));
+const scaledPosition = computed(() =>
+  position.value.transform(parentToWorld.value),
+);
 const labelPosition = computed(() => {
   switch (props.labelPosition) {
     case "top":
-      return new Vector2(
-        position.value.x,
-        position.value.y + padding / matrix.value.d,
-      );
+      return new Vector2(0, -padding / parentToWorld.value.d);
     case "bottom":
-      return new Vector2(
-        position.value.x,
-        position.value.y - padding / matrix.value.d,
-      );
+      return new Vector2(0, padding / parentToWorld.value.d);
     case "left":
-      return new Vector2(
-        position.value.x - padding / matrix.value.a,
-        position.value.y,
-      );
+      return new Vector2(-padding / parentToWorld.value.a, 0);
     case "right":
-      return new Vector2(
-        position.value.x + padding / matrix.value.a,
-        position.value.y,
-      );
+      return new Vector2(padding / parentToWorld.value.a, 0);
   }
 });
 </script>

@@ -12,7 +12,7 @@ import { computed, onMounted, ref, toRef, watch } from "vue";
 
 import { Color } from "../types.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useColors } from "../composables/useColors.ts";
 
@@ -37,7 +37,7 @@ const props = withDefaults(
 let animationFrameID: number | null = null;
 
 const { domain, size, invScale } = useGraphContext();
-const matrix = useLocalToWorld();
+const { parentToWorld } = useMatrices();
 const { parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
@@ -56,7 +56,7 @@ const visiblePoints = computed(() => {
 
 const path = computed(() => {
   const points = visiblePoints.value.map((point) =>
-    point.transform(matrix.value),
+    point.transform(parentToWorld.value),
   );
 
   if (points.length === 0) {

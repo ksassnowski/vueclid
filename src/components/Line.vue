@@ -9,6 +9,7 @@
       :stroke-width="lineWidth * invScale"
       :stroke-dasharray="dashArray"
     />
+
     <Label
       v-if="label"
       :text="label"
@@ -30,7 +31,7 @@ import Label from "./Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -61,19 +62,20 @@ if (props.to === undefined && props.slope === undefined) {
 
 const { domain, invScale } = useGraphContext();
 const { parseColor } = useColors();
-const matrix = useLocalToWorld();
+const { parentToWorld, cameraMatrix } = useMatrices();
 
 const color = parseColor(toRef(props, "color"), "stroke");
 const active = defineModel("active", { default: false });
-usePointerIntersection(
-  active,
-  (point) =>
+usePointerIntersection(active, (point) => {
+  const matrix = cameraMatrix.value.multiply(parentToWorld.value.inverse);
+  return (
     distanceToLineSegment(
-      from.value.transform(matrix.value.inverse),
-      to.value.transform(matrix.value.inverse),
+      from.value.transform(matrix),
+      to.value.transform(matrix),
       point,
-    ) <= props.highlightThreshold,
-);
+    ) <= props.highlightThreshold
+  );
+});
 
 function clamp(x: number, min: number, max: number) {
   return Math.min(max, Math.max(min, x));
@@ -81,30 +83,38 @@ function clamp(x: number, min: number, max: number) {
 
 const from = computed(() => {
   if (props.from) {
-    return new Vector2(props.from).transform(matrix.value);
+    return new Vector2(props.from).transform(parentToWorld.value);
   }
 
   if (props.to) {
-    return new Vector2(0, 0).transform(matrix.value);
+    return new Vector2(0, 0).transform(parentToWorld.value);
   }
 
   let x = (domain.value.y.x - props.yIntercept) / props.slope!;
-  x = clamp(x, domain.value.x.x, domain.value.x.y);
+  x = clamp(
+    x,
+    domain.value.x.x + cameraMatrix.value.tx,
+    domain.value.x.y - cameraMatrix.value.tx,
+  );
   const y = props.slope! * x + props.yIntercept;
-  return new Vector2(x, y).transform(matrix.value);
+  return new Vector2(x, y).transform(parentToWorld.value);
 });
 const to = computed(() => {
   if (props.to) {
-    return new Vector2(props.to).transform(matrix.value);
+    return new Vector2(props.to).transform(parentToWorld.value);
   }
 
   let x = (domain.value.y.y - props.yIntercept) / props.slope!;
-  x = clamp(x, domain.value.x.x, domain.value.x.y);
+  x = clamp(
+    x,
+    domain.value.x.x + cameraMatrix.value.tx,
+    domain.value.x.y - cameraMatrix.value.tx,
+  );
   const y = props.slope! * x + props.yIntercept;
-  return new Vector2(x, y).transform(matrix.value);
+  return new Vector2(x, y).transform(parentToWorld.value);
 });
 const labelPosition = computed(() => {
-  const worldToLocal = matrix.value.inverse;
+  const worldToLocal = parentToWorld.value.inverse;
   const localSpaceFrom = from.value.transform(worldToLocal);
   const localSpaceTo = to.value.transform(worldToLocal);
   const diff = localSpaceTo.sub(localSpaceFrom);

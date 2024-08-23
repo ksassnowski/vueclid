@@ -16,3 +16,4 @@ export const graphContext = Symbol() as InjectionKey<{
 }>;
 
 export const parentToWorld = Symbol() as InjectionKey<ComputedRef<Matrix2D>>;
+export const cameraMatrixKey = Symbol() as InjectionKey<ComputedRef<Matrix2D>>;

@@ -45,7 +45,7 @@ import Label from "../components/Label.vue";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { distanceToLineSegment } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -73,7 +73,7 @@ const props = withDefaults(
 const id = Math.random().toString(16).slice(2);
 
 const { invScale } = useGraphContext();
-const matrix = useLocalToWorld(new Vector2());
+const { parentToWorld, cameraMatrix } = useMatrices(new Vector2());
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
 const active = defineModel("active", { default: false });
@@ -81,16 +81,16 @@ usePointerIntersection(
   active,
   (point) =>
     distanceToLineSegment(
-      Vector2.wrap(props.from),
-      Vector2.wrap(props.to),
+      Vector2.wrap(props.from).transform(cameraMatrix.value),
+      Vector2.wrap(props.to).transform(cameraMatrix.value),
       point,
     ) <= props.highlightThreshold,
 );
 
 const pixelVector = computed(() =>
-  Vector2.wrap(props.to).transform(matrix.value).sub(from.value),
+  Vector2.wrap(props.to).transform(parentToWorld.value).sub(from.value),
 );
-const from = computed(() => Vector2.wrap(props.from).transform(matrix.value));
+const from = computed(() => Vector2.wrap(props.from).transform(parentToWorld.value));
 const to = computed(() => {
   const angle = pixelVector.value.angle;
   const magnitude = pixelVector.value.length();

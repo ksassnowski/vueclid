@@ -2,7 +2,7 @@
   <Angle
     v-bind="$attrs"
     :a="a"
-    :b="position"
+    :b="0"
     :c="c"
     :radius="radius"
     :dashed="dashed"
@@ -16,13 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, toRef } from "vue";
 
 import { DEG2RAD } from "../utils/constants.ts";
 import Angle from "../components/Angle.vue";
 import { useColors } from "../composables/useColors.ts";
 import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { distanceToArc } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -54,12 +55,13 @@ const props = withDefaults(
 const { colors } = useColors();
 const color = computed(() => props.color ?? colors.value.stroke);
 const active = defineModel("active", { default: false });
+const { cameraPosition } = useMatrices(toRef(props, "position"));
 usePointerIntersection(active, (point) => {
   const fromAngle = props.radians ? props.from : props.from * DEG2RAD;
   const toAngle = props.radians ? props.to : props.to * DEG2RAD;
   return (
     distanceToArc(
-      Vector2.wrap(props.position),
+      cameraPosition.value,
       fromAngle,
       toAngle,
       props.radius,
@@ -68,13 +70,12 @@ usePointerIntersection(active, (point) => {
   );
 });
 
-const position = computed(() => Vector2.wrap(props.position));
 const a = computed(() => {
   const angle = props.radians ? props.from : props.from * DEG2RAD;
-  return Vector2.fromAngle(angle).add(position.value);
+  return Vector2.fromAngle(angle);
 });
 const c = computed(() => {
   const angle = props.radians ? props.to : props.to * DEG2RAD;
-  return Vector2.fromAngle(angle).add(position.value);
+  return Vector2.fromAngle(angle);
 });
 </script>

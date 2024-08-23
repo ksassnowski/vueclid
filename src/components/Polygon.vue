@@ -30,7 +30,7 @@ import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { pointInsidePolygon } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -57,18 +57,21 @@ if (props.vertices.length < 3) {
 
 const { invScale } = useGraphContext();
 const { parseColor } = useColors();
-const matrix = useLocalToWorld();
+const { parentToWorld, cameraMatrix } = useMatrices();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) =>
-  pointInsidePolygon(vertices.value, point),
+  pointInsidePolygon(
+    props.vertices.map((v) => Vector2.wrap(v).transform(cameraMatrix.value)),
+    point,
+  ),
 );
 
 const vertices = computed(() => props.vertices.map(Vector2.wrap));
 const points = computed(() =>
-  vertices.value.map((v) => v.transform(matrix.value)),
+  vertices.value.map((v) => v.transform(parentToWorld.value)),
 );
 const angles = computed(() => {
   const result = [];

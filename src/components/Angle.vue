@@ -35,7 +35,7 @@ import { useGraphContext } from "../composables/useGraphContext.ts";
 import { Color } from "../types.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { pointInsideSector } from "../utils/geometry.ts";
 import Label from "./Label.vue";
 
@@ -62,14 +62,22 @@ const props = withDefaults(
 );
 
 const { invScale } = useGraphContext();
-const matrix = useLocalToWorld(toRef(props, "position"));
+const { parentToWorld, cameraMatrix } = useMatrices(
+  toRef(props, "position"),
+);
 const { parseColor } = useColors();
 
 const stroke = parseColor(toRef(props, "color"), "stroke");
 const fill = parseColor(toRef(props, "fill"));
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) =>
-  pointInsideSector(a.value, b.value, c.value, props.radius, point),
+  pointInsideSector(
+    a.value.transform(cameraMatrix.value),
+    b.value.transform(cameraMatrix.value),
+    c.value.transform(cameraMatrix.value),
+    props.radius,
+    point,
+  ),
 );
 
 const a = computed(() => Vector2.wrap(props.a));
@@ -82,15 +90,15 @@ const sweep = computed(() => {
     c.value.x * (a.value.y - b.value.y);
   return orientation > 0 ? 1 : 0;
 });
-const scaledB = computed(() => b.value.transform(matrix.value));
-const scaledRadius = computed(() => props.radius * matrix.value.a);
+const scaledB = computed(() => b.value.transform(parentToWorld.value));
+const scaledRadius = computed(() => props.radius * parentToWorld.value.a);
 const start = computed(() => {
   const direction = a.value.sub(b.value).normalized();
-  return b.value.add(direction.scale(props.radius)).transform(matrix.value);
+  return b.value.add(direction.scale(props.radius)).transform(parentToWorld.value);
 });
 const end = computed(() => {
   const direction = c.value.sub(b.value).normalized();
-  return b.value.add(direction.scale(props.radius)).transform(matrix.value);
+  return b.value.add(direction.scale(props.radius)).transform(parentToWorld.value);
 });
 const dashArray = computed(() =>
   props.dashed ? [6 * invScale.value, 4 * invScale.value].join(",") : "0,0",

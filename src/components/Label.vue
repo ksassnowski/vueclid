@@ -35,7 +35,7 @@ import { type PossibleVector2, Vector2 } from "../utils/Vector2.ts";
 import { useGraphContext } from "../composables/useGraphContext.ts";
 import { useColors } from "../composables/useColors.ts";
 import { usePointerIntersection } from "../composables/usePointerIntersection.ts";
-import { useLocalToWorld } from "../composables/useLocalToWorld.ts";
+import { useMatrices } from "../composables/useMatrices.ts";
 import { pointInsideRectangle } from "../utils/geometry.ts";
 
 const props = withDefaults(
@@ -68,20 +68,23 @@ const sizes = {
 };
 
 const { invScale } = useGraphContext();
-const matrix = useLocalToWorld(toRef(props, "position"));
+const { parentToWorld, cameraPosition } = useMatrices(toRef(props, "position"));
 const { colors, parseColor } = useColors();
 
 const color = parseColor(toRef(props, "color"), "stroke");
 const active = defineModel("active", { default: false });
 usePointerIntersection(active, (point) => {
-  const center = Vector2.wrap(props.position);
-  const width = boxWidth.value / matrix.value.a;
-  const height = boxHeight.value / matrix.value.a;
-  return pointInsideRectangle(center, new Vector2(width, height), point);
+  const width = boxWidth.value / parentToWorld.value.a;
+  const height = boxHeight.value / parentToWorld.value.a;
+  return pointInsideRectangle(
+    cameraPosition.value,
+    new Vector2(width, height),
+    point,
+  );
 });
 
 const position = computed(() =>
-  Vector2.wrap(props.position).transform(matrix.value),
+  Vector2.wrap(props.position).transform(parentToWorld.value),
 );
 const boxWidth = computed(() =>
   Math.max(
