@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/ksassnowski/vueclid/compare/v1.2.0...v1.3.0) (2024-08-23)
+
+
+### Features
+
+* add cursors interactivity to components ([#32](https://github.com/ksassnowski/vueclid/issues/32)) ([105b4c0](https://github.com/ksassnowski/vueclid/commit/105b4c041063f577c0965220e7ef798fabcbb77b))
+* add group component ([7b9a5a8](https://github.com/ksassnowski/vueclid/commit/7b9a5a883c6d8ee13b692ef0b0a987faa28a7b8c))
+* make components nestable ([e047572](https://github.com/ksassnowski/vueclid/commit/e04757278d5bbd4058b6d3b958307ee893699d93))
+* make cursor interaction work with nested components ([67ed3e6](https://github.com/ksassnowski/vueclid/commit/67ed3e6cf97bd4a53b700432e1bd6b5d0d242f8e))
+* pass properties along to top-level svg elements ([5a6a025](https://github.com/ksassnowski/vueclid/commit/5a6a0255a9280fff58af30d3b0657d6fa64ebc69))
+* prevent selecting label text ([4382047](https://github.com/ksassnowski/vueclid/commit/43820470beddeaf0cf5c431e2721668c1fa11707))
+
 ## [1.2.0](https://github.com/ksassnowski/vueclid/compare/v1.1.1...v1.2.0) (2024-02-28)
 
 
